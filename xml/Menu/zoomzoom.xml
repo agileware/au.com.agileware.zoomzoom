@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/admin/setting/zoomzoom</path>
+    <title>Zoom Settings</title>
+    <page_callback>CRM_Admin_Form_Generic</page_callback>
+    <access_arguments>access CiviEvent</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/civirule/form/action/zoom/createwebinarfromevent</path>
+    <page_callback>CRM_CivirulesActions_Zoom_Form_CreateWebinarFromEvent</page_callback>
+    <title>Create Zoom Webinar</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/civirule/form/action/zoom/createmeetingfromevent</path>
+    <page_callback>CRM_CivirulesActions_Zoom_Form_CreateMeetingFromEvent</page_callback>
+    <title>Create Zoom Meeting</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+  </item>
+</menu>

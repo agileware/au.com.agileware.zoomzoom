@@ -1,0 +1,22 @@
+[
+  {
+    "name": "zoom_create_webinar_from_event",
+    "label": "Create Zoom Webinar From Event",
+    "class_name": "CRM_CivirulesActions_Event_ZoomCreateWebinarFromEvent"
+  },
+  {
+    "name": "zoom_create_meeting_from_event",
+    "label": "Create Zoom Meeting From Event",
+    "class_name": "CRM_CivirulesActions_Event_ZoomCreateMeetingFromEvent"
+  },
+  {
+    "name": "zoom_add_participant",
+    "label": "Add Participant to Zoom",
+    "class_name": "CRM_CivirulesActions_Participant_ZoomAddParticipant"
+  },
+  {
+    "name": "zoom_cancel_participant",
+    "label": "Cancel Participant in Zoom",
+    "class_name": "CRM_CivirulesActions_Participant_ZoomCancelParticipant"
+  }
+]
