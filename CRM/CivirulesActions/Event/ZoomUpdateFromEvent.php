@@ -1,6 +1,6 @@
 <?php
 
-class CRM_CivirulesActions_Participant_ZoomCancelParticipant extends CRM_Civirules_Action {
+class CRM_CivirulesActions_Event_ZoomUpdateFromEvent extends CRM_Civirules_Action {
 
   /**
    * Method processAction to execute the action
@@ -10,6 +10,7 @@ class CRM_CivirulesActions_Participant_ZoomCancelParticipant extends CRM_Civirul
    * @access public
    *
    */
+
   public function processAction(CRM_Civirules_TriggerData_TriggerData $triggerData) {
     $event = $triggerData->getEntityData('Event');
 
@@ -20,25 +21,29 @@ class CRM_CivirulesActions_Participant_ZoomCancelParticipant extends CRM_Civirul
       return FALSE;
     }
 
-    // Get the related contact
-    // @TODO If the contact is invalid then exit
-    $contact_id = $triggerData->getContactId();
-    $contact = civicrm_api3('Contact', 'getsingle', ['id' => $contact_id]);
+    // Update Zoom with Event details
+    $params['topic'] = $event['title'];
 
-    $participant_id = $triggerData->getEntityData('Participant')['participant_id'];
+    // @TODO Insert the Event timezone to the Event Start time
+    $params['start_time'] = CRM_Utils_Date::customFormat($event['event_start_date'], '%Y-%m-%dT%H:%M:00Z');
 
-    $participant_record = \Civi\Api4\Participant::get()
-      ->selectRowCount()
-      ->addSelect('zoom_registrant.registrant_id')
-      ->addWhere('id', '=', $participant_id)
-      ->setLimit(1)
-      ->execute();
+    // @TODO Get the Event Timezone
+    $params['timezone'] = CRM_Core_Config::singleton()->userSystem->getTimeZoneString();
+    $params['agenda'] = $event['summary'];
 
-    if ($participant_record->rowCount != 0) {
-      $registrant_id = $participant_record[0]['zoom_registrant.registrant_id'];
-      $registrant_email = $contact['email'];
-      CRM_Zoomzoom_Zoom::cancelZoomRegistration($civicrm_zoom_id, $registrant_id, $registrant_email);
-    }
+   // Update the Zoom
+    CRM_Zoomzoom_Zoom::updateZoom($civicrm_zoom_id, $params);
+  }
+
+  /**
+   * Returns a user friendly text explaining the condition params
+   * e.g. 'Older than 65'
+   *
+   * @return string
+   * @access public
+   */
+  public function userFriendlyConditionParams() {
+    return '';
   }
 
   /**
@@ -46,11 +51,12 @@ class CRM_CivirulesActions_Participant_ZoomCancelParticipant extends CRM_Civirul
    *
    * @param CRM_Civirules_Trigger $trigger
    * @param CRM_Civirules_BAO_Rule $rule
+   *
    * @return bool
    */
   public function doesWorkWithTrigger(CRM_Civirules_Trigger $trigger, CRM_Civirules_BAO_Rule $rule) {
     $entities = $trigger->getProvidedEntities();
-    return isset($entities['Participant']);
+    return isset($entities['Event']);
   }
 
   /**
@@ -58,10 +64,12 @@ class CRM_CivirulesActions_Participant_ZoomCancelParticipant extends CRM_Civirul
    * and return false if none is needed
    *
    * @param int $ruleActionId
+   *
    * @return bool
    * @access public
    */
   public function getExtraDataInputUrl($ruleActionId) {
     return FALSE;
   }
+
 }

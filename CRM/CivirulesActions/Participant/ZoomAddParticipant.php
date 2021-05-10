@@ -14,9 +14,8 @@ class CRM_CivirulesActions_Participant_ZoomAddParticipant extends CRM_Civirules_
     $contact_id = $triggerData->getContactId();
     $event = $triggerData->getEntityData('Event');
 
-    // Look up the custom field ID for the Zoom Meeting field
-    $zoom_id_field_id = CRM_Core_BAO_CustomField::getCustomFieldID('zoom_id', 'zoom', TRUE);
-    $civicrm_zoom_id = $event[$zoom_id_field_id];
+    $civicrm_zoom_id = CRM_Zoomzoom_Zoom::getEventZoomMeetingId($event['id']);
+
     // Check if this Event has a Zoom ID set
     if (empty($civicrm_zoom_id)) {
       return FALSE;

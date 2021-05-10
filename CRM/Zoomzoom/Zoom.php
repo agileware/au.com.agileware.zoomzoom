@@ -108,7 +108,8 @@ class CRM_Zoomzoom_Zoom {
 
   /**
    *
-   * @param $params
+   * @api string $api
+   * @param string $params
    *
    * @return false|mixed
    */
@@ -142,8 +143,8 @@ class CRM_Zoomzoom_Zoom {
         // Zoom could not be created for some reason
         CRM_Core_Error::debug_log_message('Unable to create Zoom ' . $api);
         CRM_Core_Error::debug_var('Zoom API Params', $json);
-        CRM_Core_Error::debug_var('Zoom API Response Code', $response['code']);
-        CRM_Core_Error::debug_var('Zoom API Response Message', $response['message']);
+        CRM_Core_Error::debug_var('Zoom API Response Code', $zoom_api->responseCode());
+        // CRM_Core_Error::debug_var('Zoom API Response Message', $response['message']);
       }
     }
 
@@ -309,9 +310,9 @@ class CRM_Zoomzoom_Zoom {
    */
   static function getEventZoomMeetingId($eventId) {
     try {
-      $zoom_id = CRM_Core_BAO_CustomField::getCustomFieldID('zoom_id', 'zoom', TRUE);
+      $zoom_id_field_id = CRM_Core_BAO_CustomField::getCustomFieldID('zoom_id', 'zoom', TRUE);
       $result = civicrm_api3('Event', 'getvalue', [
-        'return' => $zoom_id,
+        'return' => $zoom_id_field_id,
         'id' => $eventId,
       ]);
     } catch (CiviCRM_API3_Exception $e) {
@@ -327,7 +328,7 @@ class CRM_Zoomzoom_Zoom {
    * @return false|mixed
    */
   static function createZoomRegistration($civicrm_zoom_id, $participant_id, $params) {
-    $zoom = self::getZoomObject();
+    $zoom_api = self::getZoomObject();
     $json = json_encode($params);
 
     // @TODO This should really be a helper function
@@ -338,7 +339,7 @@ class CRM_Zoomzoom_Zoom {
 
     $zoom_id = substr($civicrm_zoom_id, 1);
 
-    $response = $zoom->doRequest('POST', "/{$api}/{zoomId}/registrants", [],
+    $response = $zoom_api->doRequest('POST', "/{$api}/{zoomId}/registrants", [],
       ['zoomId' => $zoom_id], $json);
 
     // If Zoom accepted the registration, as indicated by no error code in the response
@@ -351,7 +352,7 @@ class CRM_Zoomzoom_Zoom {
         ->execute();
     }
 
-    return $zoom->responseCode();
+    return $zoom_api->responseCode();
   }
 
   /**
@@ -362,7 +363,7 @@ class CRM_Zoomzoom_Zoom {
    * @return false|mixed
    */
   static function cancelZoomRegistration($civicrm_zoom_id, $registrant_id, $registrant_email) {
-    $zoom = self::getZoomObject();
+    $zoom_api = self::getZoomObject();
 
     // @TODO This should really be a helper function
     $api = 'meetings';
@@ -383,10 +384,79 @@ class CRM_Zoomzoom_Zoom {
     ];
     $json = json_encode($params);
 
-    $zoom->doRequest('PUT', "/{$api}/{zoomId}/registrants/status", [],
+    $zoom_api->doRequest('PUT', "/{$api}/{zoomId}/registrants/status", [],
       ['zoomId' => $zoom_id], $json);
 
-    return $zoom->responseCode();
+    return $zoom_api->responseCode();
+  }
+
+  /**
+   * @param $civicrm_zoom_id
+   * @param $params
+   *
+   * @return false|mixed
+   */
+  static function updateZoom($civicrm_zoom_id, $params) {
+    $zoom_api = self::getZoomObject();
+    $json = json_encode($params);
+
+    // @TODO This should really be a helper function
+    $api = 'meetings';
+    if (substr($civicrm_zoom_id, 0, 1) == 'w') {
+      $api = 'webinars';
+    }
+
+    $zoom_id = substr($civicrm_zoom_id, 1);
+
+    $zoom_api->doRequest('PATCH', "/{$api}/{zoomId}", [],
+      ['zoomId' => $zoom_id], $json);
+
+      if ( $zoom_api->responseCode() != '204') {
+        // Zoom could not be updated for some reason
+        CRM_Core_Error::debug_log_message('Unable to update Zoom ' . $api);
+        CRM_Core_Error::debug_var('Zoom API Params', $json);
+        CRM_Core_Error::debug_var('Zoom API Response Code', $zoom_api->responseCode());
+        //CRM_Core_Error::debug_var('Zoom API Response Message', $response['message']);
+        return FALSE;
+      } else {
+        return TRUE;
+      }
+  }
+
+  /**
+   * @param $civicrm_zoom_id
+   *
+   * @return false|mixed
+   */
+  static function deleteZoom($civicrm_zoom_id) {
+    $zoom_api = self::getZoomObject();
+
+    // @TODO This should really be a helper function
+    $api = 'meetings';
+    if (substr($civicrm_zoom_id, 0, 1) == 'w') {
+      $api = 'webinars';
+    }
+
+    $zoom_id = substr($civicrm_zoom_id, 1);
+
+    $params = [
+          'cancel_webinar_reminder' => 'false',
+    ];
+    $json = json_encode($params);
+
+    $zoom_api->doRequest('DELETE', "/{$api}/{zoomId}", [],
+      ['zoomId' => $zoom_id], $json);
+
+    if ( $zoom_api->responseCode()!= '200' || $zoom_api->responseCode()!= '204') {
+      // Zoom could not be deleted for some reason
+      CRM_Core_Error::debug_log_message('Unable to update Zoom ' . $api);
+      CRM_Core_Error::debug_var('Zoom API Params', $json);
+      CRM_Core_Error::debug_var('Zoom API Response Code', $zoom_api->responseCode());
+      //CRM_Core_Error::debug_var('Zoom API Response Message', $zoom_api->responseCode());
+      return FALSE;
+    } else {
+      return TRUE;
+    }
   }
 }
 
