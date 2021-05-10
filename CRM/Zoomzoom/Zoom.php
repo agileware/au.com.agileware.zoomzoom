@@ -449,7 +449,7 @@ class CRM_Zoomzoom_Zoom {
 
     if ( $zoom_api->responseCode()!= '200' || $zoom_api->responseCode()!= '204') {
       // Zoom could not be deleted for some reason
-      CRM_Core_Error::debug_log_message('Unable to update Zoom ' . $api);
+      CRM_Core_Error::debug_log_message('Unable to delete Zoom ' . $api);
       CRM_Core_Error::debug_var('Zoom API Params', $json);
       CRM_Core_Error::debug_var('Zoom API Response Code', $zoom_api->responseCode());
       //CRM_Core_Error::debug_var('Zoom API Response Message', $zoom_api->responseCode());
