@@ -2,13 +2,16 @@
 
 
 /**
- * File to manage, all constants and defined variables in one place
+ * Zoom Zoom Constants
  *
  * @package CiviCRM
  */
 class CRM_Zoomzoom_Constants {
 
-  // Zoom Meeting, registration_type, 2 = Scheduled Meeting
+  /*
+  * Zoom Meeting, registration_type, 2 = Scheduled Meeting
+  */
+
   const zoomMeetingType = 2;
 
   const zoomMeetingFields = [
@@ -38,8 +41,10 @@ class CRM_Zoomzoom_Constants {
     'alternative_hosts_email_notification',
   ];
 
-  // Zoom Webinar, registration_type, 5 = Webinar (non-recurring)
-  // Hard-coding this option means that registration_type option is also not available
+  /*
+   * Zoom Webinar, registration_type, 5 = Webinar (non-recurring)
+   * Hard-coding this option means that registration_type option is also not available
+   */
   const zoomWebinarType = 5;
 
   const zoomWebinarFields = [
