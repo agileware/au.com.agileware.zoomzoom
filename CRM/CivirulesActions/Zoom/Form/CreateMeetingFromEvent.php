@@ -45,9 +45,9 @@ class CRM_CivirulesActions_Zoom_Form_CreateMeetingFromEvent extends CRM_Civirule
 
     $this->add('text', 'duration', ts('Webinar duration (minutes). Used for scheduled webinars only'), [], TRUE);
 
-    $this->add('text', 'schedule_for', ts('If you would like to schedule this meeting for someone else in your account, provide the Zoom user id or email address of the user here'), [], FALSE);
+    // Note: Zoom timezone is defined by the system or CiviCRM Event Timezone - not exposed as an option on this form
 
-    // @TODO Timezone is defined by system or CiviCRM Event Timezone
+    $this->add('text', 'schedule_for', ts('If you would like to schedule this meeting for someone else in your account, provide the Zoom user id or email address of the user here'), [], FALSE);
 
     // @TODO Implement password validation
     $this->add('text', 'password', ts('Webinar passcode. Passcode may only contain the following characters: [a-z A-Z 0-9 @ - _ * !]. Max of 10 characters.'), [], FALSE);

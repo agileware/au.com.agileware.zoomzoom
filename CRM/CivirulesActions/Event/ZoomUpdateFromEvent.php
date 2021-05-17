@@ -23,15 +23,20 @@ class CRM_CivirulesActions_Event_ZoomUpdateFromEvent extends CRM_Civirules_Actio
 
     // Update Zoom with Event details
     $params['topic'] = $event['title'];
-
-    // @TODO Insert the Event timezone to the Event Start time
-    $params['start_time'] = CRM_Utils_Date::customFormat($event['event_start_date'], '%Y-%m-%dT%H:%M:00Z');
-
-    // @TODO Get the Event Timezone
-    $params['timezone'] = CRM_Core_Config::singleton()->userSystem->getTimeZoneString();
     $params['agenda'] = $event['summary'];
 
-   // Update the Zoom
+    // Check if CiviCRM Event Timezone is available for this Event, if so use it
+    if (!empty($event['event_tz'])) {
+      $params['start_time'] = CRM_Utils_Date::customFormat(CRM_Utils_Date::convertTimeZone($event['event_start_date'], $event['event_tz'], NULL, 'YmdHis'), '%Y-%m-%dT%H:%M:00Z');
+      $params['timezone'] = $event['event_tz'];
+    }
+    else {
+      // Otherwise, use the CiviCRM default timezone for the Event
+      $params['start_time'] = CRM_Utils_Date::customFormat($event['event_start_date'], '%Y-%m-%dT%H:%M:00Z');
+      $params['timezone'] = CRM_Core_Config::singleton()->userSystem->getTimeZoneString();
+    }
+
+    // Update the Zoom
     CRM_Zoomzoom_Zoom::updateZoom($civicrm_zoom_id, $params);
   }
 

@@ -18,13 +18,19 @@ class CRM_CivirulesActions_Event_ZoomCreateWebinarFromEvent extends CRM_Civirule
     $params['topic'] = $event['title'];
     $params['type'] = CRM_Zoomzoom_Constants::zoomWebinarType;
 
-    // @TODO Insert the Event timezone to the Event Start time
-    $params['start_time'] = CRM_Utils_Date::customFormat($event['event_start_date'], '%Y-%m-%dT%H:%M:00Z');
+    // Check if CiviCRM Event Timezone is available for this Event, if so use it
+    if (!empty($event['event_tz'])) {
+      $params['start_time'] = CRM_Utils_Date::customFormat(CRM_Utils_Date::convertTimeZone($event['event_start_date'], $event['event_tz'], NULL, 'YmdHis'), '%Y-%m-%dT%H:%M:00Z');
+      $params['timezone'] = $event['event_tz'];
+    }
+    else {
+      // Otherwise, use the CiviCRM default timezone for the Event
+      $params['start_time'] = CRM_Utils_Date::customFormat($event['event_start_date'], '%Y-%m-%dT%H:%M:00Z');
+      $params['timezone'] = CRM_Core_Config::singleton()->userSystem->getTimeZoneString();
+    }
+
     $params['duration'] = $actionParams['duration'];
     unset($actionParams['duration']);
-
-    // @TODO Get the Event Timezone
-    $params['timezone'] = CRM_Core_Config::singleton()->userSystem->getTimeZoneString();
 
     $params['password'] = $actionParams['password'];
     unset($actionParams['password']);
