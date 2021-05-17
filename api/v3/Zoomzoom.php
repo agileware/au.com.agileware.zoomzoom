@@ -35,8 +35,8 @@ function _civicrm_api3_zoomzoom_importzooms_spec(&$spec) {
  */
 function civicrm_api3_zoomzoom_importzooms($params) {
   try {
-    $meetings = CRM_Zoomzoom_Zoom::getZooms('meeting', $params['day_offset']);
-    $webinars = CRM_Zoomzoom_Zoom::getZooms('webinar', $params['day_offset']);
+    $meetings = CRM_Zoomzoom_Zoom::getZooms('meetings', $params['day_offset']);
+    $webinars = CRM_Zoomzoom_Zoom::getZooms('webinars', $params['day_offset']);
     $zooms = array_merge($meetings, $webinars);
 
     foreach ($zooms as $zoom) {

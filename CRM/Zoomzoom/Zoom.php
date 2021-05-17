@@ -71,15 +71,6 @@ class CRM_Zoomzoom_Zoom {
    */
   static function getZooms($api, $day_offset) {
     $date_offset = strtotime('- ' . $day_offset . ' days');
-
-    // Only permit meeting and webinar zoom types
-    if ($api !== 'meeting' && $api != 'webinar') {
-      return FALSE;
-    }
-
-    // Define plural for the zoom type
-    $api_plural = $api . 's';
-
     $user = self::getOwner();
     $zoom_api = self::getZoomObject();
     $zooms = [];
@@ -91,21 +82,21 @@ class CRM_Zoomzoom_Zoom {
     ];
 
     if (!empty($user)) {
-      $zooms_list = $zoom_api->doRequest('GET', '/users/{userId}/' . $api_plural, $params, ['userId' => $user['id']]);
+      $zooms_list = $zoom_api->doRequest('GET', '/users/{userId}/' . $api, $params, ['userId' => $user['id']]);
 
-      if (!empty($zooms_list[$api_plural])) {
+      if (!empty($zooms_list[$api])) {
         //get full details about each webinar so we determine if registration is enabled
-        foreach ($zooms_list[$api_plural] as $key => $zoom_instance) {
+        foreach ($zooms_list[$api] as $key => $zoom_instance) {
           // Prepend the type of Zoom to the ID
-          $zooms_list[$api_plural][$key]['civicrm_zoom_id'] = substr($api, 0, 1) . $zoom_instance['id'];
+          $zooms_list[$api][$key]['civicrm_zoom_id'] = substr($api, 0, 1) . $zoom_instance['id'];
 
           // If Zoom start time prior to the date offset then remove it
           if (strtotime($zoom_instance['start_time']) < $date_offset) {
-            unset($zooms_list[$api_plural][$key]);
+            unset($zooms_list[$api][$key]);
           }
         }
 
-        $zooms += $zooms_list[$api_plural];
+        $zooms += $zooms_list[$api];
       }
     }
 
@@ -114,6 +105,9 @@ class CRM_Zoomzoom_Zoom {
 
   /**
    * Create Zoom using supplied parameters
+   * Zoom API documentation:
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarcreate
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
    *
    * @param string $params see Zoom documentation for parameters
    *
@@ -170,14 +164,6 @@ class CRM_Zoomzoom_Zoom {
    * @return array|mixed
    */
   static function getPastParticipants($api, $zoom_id) {
-    // Only permit meeting and webinar zoom types
-    if ($api !== 'meeting' && $api != 'webinar') {
-      return FALSE;
-    }
-
-    // Define plural for the zoom type
-    $api_plural = $api . 's';
-
     $user = self::getOwner();
     $zoom_api = self::getZoomObject();
     $participants = [];
@@ -188,7 +174,7 @@ class CRM_Zoomzoom_Zoom {
     ];
 
     if (!empty($user)) {
-      $zoom_participants = $zoom_api->doRequest('GET', '/past_' . $api_plural . '/' . $zoom_id . '/participants', $params, ['userId' => $user['id']]);
+      $zoom_participants = $zoom_api->doRequest('GET', '/past_' . $api . '/' . $zoom_id . '/participants', $params, ['userId' => $user['id']]);
 
       // If participants exist for this Zoom
       if (!empty($zoom_participants['participants'])) {
@@ -213,14 +199,6 @@ class CRM_Zoomzoom_Zoom {
    * @return array|mixed
    */
   static function getRegistrants($api, $zoom_id) {
-    // Only permit meeting and webinar zoom types
-    if ($api !== 'meeting' && $api != 'webinar') {
-      return FALSE;
-    }
-
-    // Define plural for the zoom type
-    $api_plural = $api . 's';
-
     $user = self::getOwner();
     $zoom_api = self::getZoomObject();
     $registrants = [];
@@ -231,7 +209,7 @@ class CRM_Zoomzoom_Zoom {
     ];
 
     if (!empty($user)) {
-      $zoom_participants = $zoom_api->doRequest('GET', '/' . $api_plural . '/' . $zoom_id . '/registrants', $params, ['userId' => $user['id']]);
+      $zoom_participants = $zoom_api->doRequest('GET', '/' . $api . '/' . $zoom_id . '/registrants', $params, ['userId' => $user['id']]);
 
       // If registrations are enabled for the Zoom then get the registrants
       if (!empty($zoom_participants['registrants'])) {
@@ -353,17 +331,17 @@ class CRM_Zoomzoom_Zoom {
 
   /**
    * Helper function to return the Zoom Web API based on the CiviCRM Zoom ID
-   * eg. m1234567 will return meeting; w1234567 will return webinar
+   * eg. m1234567 will return meetings; w1234567 will return webinars
    *
    * @param string $civicrm_zoom_id Zoom ID in format of m1234567 or
    *   w1234567
    *
-   * @return string
+   * @return array single, plural
    */
   static function getZoomAPIFromCiviCRMZoomId($civicrm_zoom_id) {
-    $api = 'meeting';
+    $api = 'meetings';
     if (substr(strtolower($civicrm_zoom_id), 0, 1) == 'w') {
-      $api = 'webinar';
+      $api = 'webinars';
     }
     return $api;
   }
@@ -401,7 +379,7 @@ class CRM_Zoomzoom_Zoom {
     $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($civicrm_zoom_id);
     $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($civicrm_zoom_id);
 
-    $response = $zoom_api->doRequest('POST', "/{$api}/{zoomId}/registrants", [],
+    $response = $zoom_api->doRequest('POST', '/'.$api.'/{zoomId}/registrants', [],
       ['zoomId' => $zoom_id], $json);
 
     // If Zoom accepted the registration, as indicated by no error code in the response
@@ -455,7 +433,7 @@ class CRM_Zoomzoom_Zoom {
     ];
     $json = json_encode($params);
 
-    $zoom_api->doRequest('PUT', "/{$api}/{zoomId}/registrants/status", [],
+    $zoom_api->doRequest('PUT', '/' . $api . '/{zoomId}/registrants/status', [],
       ['zoomId' => $zoom_id], $json);
 
     return $zoom_api->responseCode();
@@ -479,7 +457,7 @@ class CRM_Zoomzoom_Zoom {
     $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($civicrm_zoom_id);
     $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($civicrm_zoom_id);
 
-    $zoom_api->doRequest('PATCH', "/{$api}/{zoomId}", [],
+    $zoom_api->doRequest('PATCH', '/' . $api . '/{zoomId}', [],
       ['zoomId' => $zoom_id], $json);
 
     if ($zoom_api->responseCode() != '204') {
@@ -515,7 +493,7 @@ class CRM_Zoomzoom_Zoom {
     ];
     $json = json_encode($params);
 
-    $zoom_api->doRequest('DELETE', "/{$api}/{zoomId}", [],
+    $zoom_api->doRequest('DELETE', '/' . $api .'/{zoomId}', [],
       ['zoomId' => $zoom_id], $json);
 
     if ($zoom_api->responseCode() != '200' || $zoom_api->responseCode() != '204') {
