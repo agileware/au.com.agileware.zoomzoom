@@ -7,9 +7,8 @@ This is just another [CiviCRM](https://civicrm.org) extension which integrates w
 * CiviRule to delete Zoom from Event
 * CiviRule to add Participant to Zoom
 * CiviRule to cancel Participant in Zoom
-* Scheduled Job to import Zooms as Events
-* Scheduled Job to check Zoom registrations and import as CiviCRM Events and Participants
-* Scheduled Job to check Zoom attendances and add CiviCRM Participant and update Participant Status, setting to Attended
+* Scheduled Job to import Zoom Webinars and Zoom Events as CiviCRM Events 
+* Scheduled Job to check Zoom registrations and attendees, record as CiviCRM Participants and update Participant Status, setting to Attended for attendees
 
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
