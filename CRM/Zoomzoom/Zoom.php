@@ -63,43 +63,48 @@ class CRM_Zoomzoom_Zoom {
 
   /**
    * Gets all the Zooms for date range using a day offset from today
+   * Zoom API documentation:
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinars
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetings
    *
    * @param string $api use values: meeting, webinar
    * @param int $day_offset
    *
    * @return array|bool
    */
-  static function getZooms($api, $day_offset) {
-    $date_offset = strtotime('- ' . $day_offset . ' days');
+  static function getZooms($api, $day_offset = 0) {
+    $date_offset = strtotime('-' . $day_offset . ' days');
     $user = self::getOwner();
     $zoom_api = self::getZoomObject();
     $zooms = [];
 
-    // @TODO Implement a pager for the results
     $params = [
       'page_size' => 300,
-      // @TODO This does not work apparently
     ];
 
     if (!empty($user)) {
-      $zooms_list = $zoom_api->doRequest('GET', '/users/{userId}/' . $api, $params, ['userId' => $user['id']]);
+      do {
+        $zooms_list = $zoom_api->doRequest('GET', '/users/{userId}/' . $api, $params, ['userId' => $user['id']]);
 
-      if (!empty($zooms_list[$api])) {
-        //get full details about each webinar so we determine if registration is enabled
-        foreach ($zooms_list[$api] as $key => $zoom_instance) {
-          // Prepend the type of Zoom to the ID
-          $zooms_list[$api][$key]['civicrm_zoom_id'] = substr($api, 0, 1) . $zoom_instance['id'];
+        // Set the next results page token is available otherwise, NULL to exit
+        $params['next_page_token'] = (empty($zooms_list['next_page_token'])) ? NULL : $zooms_list['next_page_token'];
 
-          // If Zoom start time prior to the date offset then remove it
-          if (strtotime($zoom_instance['start_time']) < $date_offset) {
-            unset($zooms_list[$api][$key]);
+        if (!empty($zooms_list[$api])) {
+          //get full details about each webinar so we determine if registration is enabled
+          foreach ($zooms_list[$api] as $key => $zoom_instance) {
+            // Prepend the type of Zoom to the ID
+            $zooms_list[$api][$key]['civicrm_zoom_id'] = substr($api, 0, 1) . $zoom_instance['id'];
+
+            // If Zoom start time prior to the date offset then remove it
+            if (strtotime($zoom_instance['start_time']) < $date_offset) {
+              unset($zooms_list[$api][$key]);
+            }
           }
+
+          $zooms += $zooms_list[$api];
         }
-
-        $zooms += $zooms_list[$api];
-      }
+      } while (!empty($params['next_page_token']));
     }
-
     return $zooms;
   }
 
@@ -163,29 +168,32 @@ class CRM_Zoomzoom_Zoom {
    *
    * @return array|mixed
    */
-  static function getPastParticipants($api, $zoom_id) {
-    $user = self::getOwner();
-    $zoom_api = self::getZoomObject();
-    $participants = [];
+    static function getPastParticipants($api, $zoom_id) {
+      $user = self::getOwner();
+      $zoom_api = self::getZoomObject();
+      $participants = [];
 
-    // @TODO Implement a pager for the results
-    $params = [
-      'page_size' => 300,
-    ];
+      $params = [
+        'page_size' => 300,
+      ];
 
-    if (!empty($user)) {
-      $zoom_participants = $zoom_api->doRequest('GET', '/past_' . $api . '/' . $zoom_id . '/participants', $params, ['userId' => $user['id']]);
+      if (!empty($user)) {
+        do {
+          $zoom_participants = $zoom_api->doRequest('GET', '/past_' . $api . '/' . $zoom_id . '/participants', $params, ['userId' => $user['id']]);
 
-      // If participants exist for this Zoom
-      if (!empty($zoom_participants['participants'])) {
-        foreach ($zoom_participants['participants'] as $key => $zoom_participant) {
-          $participants[] = $zoom_participant;
-        }
+          // Set the next results page token is available otherwise, NULL to exit
+          $params['next_page_token'] = (empty($zoom_participants['next_page_token'])) ? NULL : $zoom_participants['next_page_token'];
+
+          // If participants exist for this Zoom
+          if (!empty($zoom_participants['participants'])) {
+            foreach ($zoom_participants['participants'] as $key => $zoom_participant) {
+              $participants[] = $zoom_participant;
+            }
+          }
+        } while (!empty($params['next_page_token']));
       }
+      return $participants;
     }
-
-    return $participants;
-  }
 
   /**
    * Get Zoom Registrants
@@ -198,28 +206,32 @@ class CRM_Zoomzoom_Zoom {
    *
    * @return array|mixed
    */
-  static function getRegistrants($api, $zoom_id) {
-    $user = self::getOwner();
-    $zoom_api = self::getZoomObject();
-    $registrants = [];
+    static function getRegistrants($api, $zoom_id) {
+      $user = self::getOwner();
+      $zoom_api = self::getZoomObject();
+      $registrants = [];
 
-    // @TODO Implement a pager for the results
-    $params = [
-      'page_size' => 300,
-    ];
+      $params = [
+        'page_size' => 300,
+      ];
 
-    if (!empty($user)) {
-      $zoom_participants = $zoom_api->doRequest('GET', '/' . $api . '/' . $zoom_id . '/registrants', $params, ['userId' => $user['id']]);
+      if (!empty($user)) {
 
-      // If registrations are enabled for the Zoom then get the registrants
-      if (!empty($zoom_participants['registrants'])) {
-        foreach ($zoom_participants['registrants'] as $key => $zoom_participant) {
-          $registrants[] = $zoom_participant;
-        }
+        do {
+          $zoom_participants = $zoom_api->doRequest('GET', '/' . $api . '/' . $zoom_id . '/registrants', $params, ['userId' => $user['id']]);
+
+          // Set the next results page token is available otherwise, NULL to exit
+          $params['next_page_token'] = (empty($zoom_participants['next_page_token'])) ? NULL : $zoom_participants['next_page_token'];
+
+          // If registrations are enabled for the Zoom then get the registrants
+          if (!empty($zoom_participants['registrants'])) {
+            foreach ($zoom_participants['registrants'] as $key => $zoom_participant) {
+              $registrants[] = $zoom_participant;
+            }
+          }
+        } while (!empty($params['next_page_token']));
       }
-    }
-
-    return $registrants;
+      return $registrants;
   }
 
   /**
