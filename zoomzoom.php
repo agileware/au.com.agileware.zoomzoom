@@ -89,6 +89,40 @@ function zoomzoom_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_managed
  */
 function zoomzoom_civicrm_managed(&$entities) {
+  $entities[] = [
+    'module' => 'au.com.agileware.zoomzoom',
+    'name' => 'ZoomZoom_ImportZooms',
+    'entity' => 'Job',
+    'update' => 'clean',
+    'params' => [
+      'version' => 3,
+      'run_frequency' => 'Daily',
+      'name' => 'Import Zoom Webinars and Meetings',
+      'description' => 'Import Zoom Webinars and Zoom Meetings',
+      'api_entity' => 'Zoomzoom',
+      'api_action' => 'importzooms',
+      'parameters' => "day_offset=30",
+      'is_active' => '0',
+    ],
+  ];
+
+  $entities[] = [
+    'module' => 'au.com.agileware.zoomzoom',
+    'name' => 'ZoomZoom_ImportAttendees',
+    'entity' => 'Job',
+    'update' => 'clean',
+    'params' => [
+      'version' => 3,
+      'run_frequency' => 'Daily',
+      'name' => 'Import Zoom Registrations and Attendees',
+      'description' => 'Import Zoom registrations and attendees for those CiviCRM Events with a Zoom ID',
+      'api_entity' => 'Zoomzoom',
+      'api_action' => 'importattendees',
+      'parameters' => "day_offset=30",
+      'is_active' => '0',
+    ],
+  ];
+
   _zoomzoom_civix_civicrm_managed($entities);
 }
 
