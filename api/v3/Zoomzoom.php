@@ -123,7 +123,7 @@ function civicrm_api3_zoomzoom_importattendees($params) {
         ->addSelect('zoom.zoom_id')
         ->addSelect('start_date')
         ->addWhere('zoom.zoom_id', 'IS NOT EMPTY')
-        ->addWhere('start_date', '>=', date('Y-m-d', strtotime('- ' . $params['day_offset'] . ' days')))
+        ->addWhere('start_date', '>=', date('Y-m-d', strtotime('-' . $params['day_offset'] . ' days')))
         ->execute();
 
       foreach ($events as $event) {
