@@ -21,8 +21,18 @@ class CRM_CivirulesActions_Event_ZoomDeleteFromEvent extends CRM_Civirules_Actio
       return FALSE;
     }
 
-   // Delete the Zoom
-    CRM_Zoomzoom_Zoom::deleteZoom($civicrm_zoom_id);
+    // Delete the Zoom and if deleted, then remove Zoom details from Event
+    if (CRM_Zoomzoom_Zoom::deleteZoom($civicrm_zoom_id)) {
+      \Civi\Api4\Event::update()
+        ->addWhere('id', '=', $event['id'])
+        ->addValue('zoom.zoom_id', '')
+        ->addValue('zoom.password', '')
+        ->addValue('zoom.start_url', '')
+        ->addValue('zoom.join_url', '')
+        ->addValue('zoom.registration_url', '')
+        ->addValue('zoom.global_dial_in_numbers', '')
+        ->execute();
+    }
   }
 
   /**
