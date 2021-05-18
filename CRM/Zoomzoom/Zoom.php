@@ -508,7 +508,7 @@ class CRM_Zoomzoom_Zoom {
     $zoom_api->doRequest('DELETE', '/' . $api .'/{zoomId}', [],
       ['zoomId' => $zoom_id], $json);
 
-    if ($zoom_api->responseCode() != '200' || $zoom_api->responseCode() != '204') {
+    if ($zoom_api->responseCode() != '200' && $zoom_api->responseCode() != '204') {
       // Zoom could not be deleted for some reason
       CRM_Core_Error::debug_log_message('Unable to delete Zoom ' . $api);
       CRM_Core_Error::debug_var('Zoom API Params', $json);
