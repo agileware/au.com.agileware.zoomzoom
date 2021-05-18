@@ -20,11 +20,6 @@ class CRM_CivirulesActions_Participant_ZoomCancelParticipant extends CRM_Civirul
       return FALSE;
     }
 
-    // Get the related contact
-    // @TODO If the contact is invalid then exit
-    $contact_id = $triggerData->getContactId();
-    $contact = civicrm_api3('Contact', 'getsingle', ['id' => $contact_id]);
-
     $participant_id = $triggerData->getEntityData('Participant')['participant_id'];
 
     $participant_record = \Civi\Api4\Participant::get()
@@ -36,8 +31,13 @@ class CRM_CivirulesActions_Participant_ZoomCancelParticipant extends CRM_Civirul
 
     if ($participant_record->rowCount != 0) {
       $registrant_id = $participant_record[0]['zoom_registrant.registrant_id'];
-      $registrant_email = $contact['email'];
-      CRM_Zoomzoom_Zoom::cancelZoomRegistration($civicrm_zoom_id, $registrant_id, $registrant_email);
+      CRM_Zoomzoom_Zoom::deleteZoomRegistration($civicrm_zoom_id, $registrant_id);
+
+      // Remove the Zoom details from the registration
+      // SQL query required to prevent CiviRules recursion due to Participant changed trigger
+      CRM_Core_DAO::executeQuery('UPDATE civicrm_value_zoom_registrant SET `registrant_id` = NULL, `join_url` = NULL WHERE civicrm_value_zoom_registrant.entity_id = %1', [
+        '1' => [$participant_id, 'Integer'],
+      ]);
     }
   }
 
@@ -46,6 +46,7 @@ class CRM_CivirulesActions_Participant_ZoomCancelParticipant extends CRM_Civirul
    *
    * @param CRM_Civirules_Trigger $trigger
    * @param CRM_Civirules_BAO_Rule $rule
+   *
    * @return bool
    */
   public function doesWorkWithTrigger(CRM_Civirules_Trigger $trigger, CRM_Civirules_BAO_Rule $rule) {
@@ -58,10 +59,12 @@ class CRM_CivirulesActions_Participant_ZoomCancelParticipant extends CRM_Civirul
    * and return false if none is needed
    *
    * @param int $ruleActionId
+   *
    * @return bool
    * @access public
    */
   public function getExtraDataInputUrl($ruleActionId) {
     return FALSE;
   }
+
 }

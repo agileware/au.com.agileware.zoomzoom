@@ -13,6 +13,7 @@ class CRM_CivirulesActions_Participant_ZoomAddParticipant extends CRM_Civirules_
   public function processAction(CRM_Civirules_TriggerData_TriggerData $triggerData) {
     $contact_id = $triggerData->getContactId();
     $event = $triggerData->getEntityData('Event');
+    $participant_id = $triggerData->getEntityData('Participant')['participant_id'];
 
     $civicrm_zoom_id = CRM_Zoomzoom_Zoom::getEventZoomMeetingId($event['id']);
 
@@ -23,10 +24,6 @@ class CRM_CivirulesActions_Participant_ZoomAddParticipant extends CRM_Civirules_
 
     // Get the related contact
     $contact = civicrm_api3('Contact', 'getsingle', ['id' => $contact_id]);
-
-    // @TODO If the contact is invalid then exit
-
-    $participant_id = $triggerData->getEntityData('Participant')['participant_id'];
 
     $params = [
       'email' => $contact['email'],
@@ -60,6 +57,7 @@ class CRM_CivirulesActions_Participant_ZoomAddParticipant extends CRM_Civirules_
    *
    * @param CRM_Civirules_Trigger $trigger
    * @param CRM_Civirules_BAO_Rule $rule
+   *
    * @return bool
    */
   public function doesWorkWithTrigger(CRM_Civirules_Trigger $trigger, CRM_Civirules_BAO_Rule $rule) {
@@ -72,10 +70,12 @@ class CRM_CivirulesActions_Participant_ZoomAddParticipant extends CRM_Civirules_
    * and return false if none is needed
    *
    * @param int $ruleActionId
+   *
    * @return bool
    * @access public
    */
   public function getExtraDataInputUrl($ruleActionId) {
     return FALSE;
   }
+
 }

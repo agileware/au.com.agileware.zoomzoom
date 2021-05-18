@@ -168,32 +168,32 @@ class CRM_Zoomzoom_Zoom {
    *
    * @return array|mixed
    */
-    static function getPastParticipants($api, $zoom_id) {
-      $user = self::getOwner();
-      $zoom_api = self::getZoomObject();
-      $participants = [];
+  static function getPastParticipants($api, $zoom_id) {
+    $user = self::getOwner();
+    $zoom_api = self::getZoomObject();
+    $participants = [];
 
-      $params = [
-        'page_size' => 300,
-      ];
+    $params = [
+      'page_size' => 300,
+    ];
 
-      if (!empty($user)) {
-        do {
-          $zoom_participants = $zoom_api->doRequest('GET', '/past_' . $api . '/' . $zoom_id . '/participants', $params, ['userId' => $user['id']]);
+    if (!empty($user)) {
+      do {
+        $zoom_participants = $zoom_api->doRequest('GET', '/past_' . $api . '/' . $zoom_id . '/participants', $params, ['userId' => $user['id']]);
 
-          // Set the next results page token is available otherwise, NULL to exit
-          $params['next_page_token'] = (empty($zoom_participants['next_page_token'])) ? NULL : $zoom_participants['next_page_token'];
+        // Set the next results page token is available otherwise, NULL to exit
+        $params['next_page_token'] = (empty($zoom_participants['next_page_token'])) ? NULL : $zoom_participants['next_page_token'];
 
-          // If participants exist for this Zoom
-          if (!empty($zoom_participants['participants'])) {
-            foreach ($zoom_participants['participants'] as $key => $zoom_participant) {
-              $participants[] = $zoom_participant;
-            }
+        // If participants exist for this Zoom
+        if (!empty($zoom_participants['participants'])) {
+          foreach ($zoom_participants['participants'] as $key => $zoom_participant) {
+            $participants[] = $zoom_participant;
           }
-        } while (!empty($params['next_page_token']));
-      }
-      return $participants;
+        }
+      } while (!empty($params['next_page_token']));
     }
+    return $participants;
+  }
 
   /**
    * Get Zoom Registrants
@@ -206,32 +206,32 @@ class CRM_Zoomzoom_Zoom {
    *
    * @return array|mixed
    */
-    static function getRegistrants($api, $zoom_id) {
-      $user = self::getOwner();
-      $zoom_api = self::getZoomObject();
-      $registrants = [];
+  static function getRegistrants($api, $zoom_id) {
+    $user = self::getOwner();
+    $zoom_api = self::getZoomObject();
+    $registrants = [];
 
-      $params = [
-        'page_size' => 300,
-      ];
+    $params = [
+      'page_size' => 300,
+    ];
 
-      if (!empty($user)) {
+    if (!empty($user)) {
 
-        do {
-          $zoom_participants = $zoom_api->doRequest('GET', '/' . $api . '/' . $zoom_id . '/registrants', $params, ['userId' => $user['id']]);
+      do {
+        $zoom_participants = $zoom_api->doRequest('GET', '/' . $api . '/' . $zoom_id . '/registrants', $params, ['userId' => $user['id']]);
 
-          // Set the next results page token is available otherwise, NULL to exit
-          $params['next_page_token'] = (empty($zoom_participants['next_page_token'])) ? NULL : $zoom_participants['next_page_token'];
+        // Set the next results page token is available otherwise, NULL to exit
+        $params['next_page_token'] = (empty($zoom_participants['next_page_token'])) ? NULL : $zoom_participants['next_page_token'];
 
-          // If registrations are enabled for the Zoom then get the registrants
-          if (!empty($zoom_participants['registrants'])) {
-            foreach ($zoom_participants['registrants'] as $key => $zoom_participant) {
-              $registrants[] = $zoom_participant;
-            }
+        // If registrations are enabled for the Zoom then get the registrants
+        if (!empty($zoom_participants['registrants'])) {
+          foreach ($zoom_participants['registrants'] as $key => $zoom_participant) {
+            $registrants[] = $zoom_participant;
           }
-        } while (!empty($params['next_page_token']));
-      }
-      return $registrants;
+        }
+      } while (!empty($params['next_page_token']));
+    }
+    return $registrants;
   }
 
   /**
@@ -391,18 +391,19 @@ class CRM_Zoomzoom_Zoom {
     $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($civicrm_zoom_id);
     $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($civicrm_zoom_id);
 
-    $response = $zoom_api->doRequest('POST', '/'.$api.'/{zoomId}/registrants', [],
+    $response = $zoom_api->doRequest('POST', '/' . $api . '/{zoomId}/registrants', [],
       ['zoomId' => $zoom_id], $json);
 
     // If Zoom accepted the registration, as indicated by no error code in the response
     if (!empty($response['registrant_id'])) {
       try {
         // Record the Zoom details for the registration
-        \Civi\Api4\Participant::update()
-          ->addWhere('id', '=', $participant_id)
-          ->addValue('zoom_registrant.registrant_id', $response['registrant_id'])
-          ->addValue('zoom_registrant.join_url', $response['join_url'])
-          ->execute();
+        // SQL query required to prevent CiviRules recursion due to Participant changed trigger
+        CRM_Core_DAO::executeQuery('UPDATE civicrm_value_zoom_registrant SET `registrant_id` = %1, `join_url` = %2 WHERE civicrm_value_zoom_registrant.entity_id = %3', [
+          '1' => [$response['registrant_id'], 'String'],
+          '2' => [$response['join_url'], 'String'],
+          '3' => [$participant_id, 'Integer'],
+        ]);
       } catch (API_Exception $e) {
         $errorMessage = $e->getMessage();
         CRM_Core_Error::debug_var('Zoomzoom::createZoomRegistration', $errorMessage);
@@ -416,37 +417,25 @@ class CRM_Zoomzoom_Zoom {
   }
 
   /**
-   * Updates an existing Zoom registration
+   * Deletes an existing Zoom registration
    * Zoom API documentation:
-   * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarregistrantstatus
-   * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingregistrantstatus
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/deletewebinarregistrant
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingregistrantdelete
    *
    * @param string $civicrm_zoom_id Zoom ID in format of m1234567 or
    *   w1234567
    * @param string $registrant_id the Zoom Registrant ID
-   * @param $registrant_email email address of the Zoom Registrant
    *
    * @return false|mixed
    */
-  static function cancelZoomRegistration($civicrm_zoom_id, $registrant_id, $registrant_email) {
+  static function deleteZoomRegistration($civicrm_zoom_id, $registrant_id) {
     $zoom_api = self::getZoomObject();
 
     $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($civicrm_zoom_id);
     $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($civicrm_zoom_id);
 
-    $params = [
-      'action' => 'cancel',
-      'registrants' => [
-        [
-          'id' => $registrant_id,
-          'email' => $registrant_email,
-        ],
-      ],
-    ];
-    $json = json_encode($params);
-
-    $zoom_api->doRequest('PUT', '/' . $api . '/{zoomId}/registrants/status', [],
-      ['zoomId' => $zoom_id], $json);
+    $zoom_api->doRequest('DELETE', '/' . $api . '/{zoomId}/registrants/{registrantId}', [],
+      ['zoomId' => $zoom_id, 'registrantId' => $registrant_id]);
 
     return $zoom_api->responseCode();
   }
@@ -505,7 +494,7 @@ class CRM_Zoomzoom_Zoom {
     ];
     $json = json_encode($params);
 
-    $zoom_api->doRequest('DELETE', '/' . $api .'/{zoomId}', [],
+    $zoom_api->doRequest('DELETE', '/' . $api . '/{zoomId}', [],
       ['zoomId' => $zoom_id], $json);
 
     if ($zoom_api->responseCode() != '200' && $zoom_api->responseCode() != '204') {
