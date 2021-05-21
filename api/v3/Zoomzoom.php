@@ -34,6 +34,7 @@ function _civicrm_api3_zoomzoom_importzooms_spec(&$spec) {
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
 function civicrm_api3_zoomzoom_importzooms($params) {
+  static $civicrm_timezones;
   try {
     $meetings = CRM_Zoomzoom_Zoom::getZooms('meetings', $params['day_offset']);
     $webinars = CRM_Zoomzoom_Zoom::getZooms('webinars', $params['day_offset']);
@@ -47,6 +48,7 @@ function civicrm_api3_zoomzoom_importzooms($params) {
          * Use of the $event_type here may be a problem if the name (not label) has been translated
          */
 
+        // @TODO See CIVIZOOM-33
         $event_type = 'Meeting';
         if (substr($zoom['civicrm_zoom_id'], 0, 1) == 'w') {
           $event_type = 'Webinar';
@@ -58,16 +60,64 @@ function civicrm_api3_zoomzoom_importzooms($params) {
           ->addWhere('zoom.zoom_id', '=', $zoom['civicrm_zoom_id'])
           ->execute();
 
-        // Event does not exist, create it now
+        // Event does not exist, then set up the new Event
         if ($events->rowCount == 0) {
-          $results = \Civi\Api4\Event::create()
+          $new_event = \Civi\Api4\Event::create()
             ->addValue('title', $zoom['topic'])
             ->addValue('zoom.zoom_id', $zoom['civicrm_zoom_id'])
-            ->addValue('start_date', date('Y-m-d H:i:s', strtotime($zoom['start_time'])))
             ->addValue('summary', $zoom['topic'])
             ->addValue('event_type_id:name', $event_type)
-            ->addValue('is_public', FALSE)
-            ->execute();
+            ->addValue('is_public', FALSE);
+
+          // Set other Zoom fields, if available
+          if (!empty($zoom['start_url'])) {
+            $new_event->addValue('zoom.start_url', $zoom['start_url']);
+          }
+          if (!empty($zoom['join_url'])) {
+            $new_event->addValue('zoom.join_url', $zoom['join_url']);
+          }
+          if (!empty($zoom['registration_url'])) {
+            $new_event->addValue('zoom.registration_url', $zoom['registration_url']);
+          }
+          if (!empty($zoom['password'])) {
+            $new_event->addValue('zoom.password', $zoom['password']);
+          }
+
+          // Populate the Zoom dial-in numbers, if available
+          if (!empty($zoom['global_dial_in_numbers'])) {
+            $zoom_dids = '';
+            foreach ($zoom['global_dial_in_numbers'] as $dial_in_number) {
+              $zoom_dids .= $dial_in_number['number'] . ' (' . $dial_in_number['country_name'] . ')<br/>';
+            }
+          }
+
+          // If this CiviCRM site support Event timezones
+          if (method_exists('CRM_Utils_Date', 'convertTimeZone')) {
+            // Return all CiviCRM timezones
+            if (empty($civicrm_timezones)) {
+              $civicrm_timezones = civicrm_api3('Event', 'getoptions', [
+                'field' => 'event_tz',
+              ]);
+            }
+            // Use CiviCRM site timezone by default
+            $zoom_timezone = CRM_Core_Config::singleton()->userSystem->getTimeZoneString();
+
+            // Check if the Zoom defined timezone is supported on this CiviCRM site
+            if (array_key_exists($zoom['timezone'], $civicrm_timezones['values'])) {
+              $zoom_timezone = $zoom['timezone'];
+            }
+            // Set the Event timezone
+            $new_event->addValue('event_tz', $zoom_timezone);
+
+            // Set the Event start date in the correct timezone
+            $start_date = CRM_Utils_Date::convertTimeZone($zoom['start_time'], NULL, $zoom_timezone);
+            $new_event->addValue('start_date', $start_date);
+          }
+          else {
+            // Otherwise CiviCRM site has not timezone support, just record the time and people will have to figure it out
+            $new_event->addValue('start_date', date('Y-m-d H:i:s', strtotime($zoom['start_time'])));
+          }
+          $new_event->execute();
         }
       } catch (Exception $e) {
         continue;
@@ -105,8 +155,9 @@ function _civicrm_api3_zoomzoom_importattendees_spec(&$spec) {
 /**
  * zoomzoom.importattendees implementation
  *
- * Import Zoom registrations and attendees for those CiviCRM Events with a Zoom ID.
- * Checks for CiviCRM Events scheduled after today, offset by a number of days.
+ * Import Zoom registrations and attendees for those CiviCRM Events with a Zoom
+ * ID. Checks for CiviCRM Events scheduled after today, offset by a number of
+ * days.
  *
  * @param array $spec description of fields supported by this API call
  *
