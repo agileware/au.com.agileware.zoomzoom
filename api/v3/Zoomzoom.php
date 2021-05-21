@@ -114,7 +114,7 @@ function civicrm_api3_zoomzoom_importzooms($params) {
             $new_event->addValue('start_date', $start_date);
           }
           else {
-            // Otherwise CiviCRM site has not timezone support, just record the time and people will have to figure it out
+            // Otherwise CiviCRM site has no timezone support, just record the time and people will have to figure it out
             $new_event->addValue('start_date', date('Y-m-d H:i:s', strtotime($zoom['start_time'])));
           }
           $new_event->execute();
