@@ -73,7 +73,7 @@ class CRM_Zoomzoom_Zoom {
    * @return array|bool
    */
   static function getZooms($api, $day_offset = 0) {
-    $date_offset = strtotime('-' . $day_offset . ' days');
+    $date_offset = strtotime($day_offset . ' days');
     $user = self::getOwner();
     $zoom_api = self::getZoomObject();
     $zooms = [];
