@@ -32,10 +32,11 @@ return [
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::eventType'
     ],
-    'title' => ts('Default Event Type for imported Zoom Meeting'),
+    'title' => ts('Zoom Meeting, Event Type'),
     'is_domain' => 1,
     'is_contact' => 0,
     'settings_pages' => ['zoomzoom' => ['weight' => 10]],
+    'description' => ts('Event Type to assign to Events imported a Zoom Meeting'),
   ],
   'zoom_import_webinar' => [
     'name' => 'zoom_import_webinar',
@@ -46,10 +47,11 @@ return [
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::eventType'
     ],
-    'title' => ts('Default Event Type for imported Zoom Webinar'),
+    'title' => ts('Zoom Webinar, Event Type'),
     'is_domain' => 1,
     'is_contact' => 0,
     'settings_pages' => ['zoomzoom' => ['weight' => 10]],
+    'description' => ts('Event Type to assign to Events imported a Zoom Webinar'),
   ],
   'zoom_import_status_registration' => [
     'name' => 'zoom_import_status_registration',
