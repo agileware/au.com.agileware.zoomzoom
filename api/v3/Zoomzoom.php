@@ -42,16 +42,10 @@ function civicrm_api3_zoomzoom_importzooms($params) {
 
     foreach ($zooms as $zoom) {
       try {
-
-        /*
-         * Note to potential translators or people using this extension in a different language
-         * Use of the $event_type here may be a problem if the name (not label) has been translated
-         */
-
-        // @TODO See CIVIZOOM-33
-        $event_type = 'Meeting';
+        // Get the Event Type settings for imported Zooms
+        $event_type = Civi::settings()->get('zoom_import_meeting');
         if (substr($zoom['civicrm_zoom_id'], 0, 1) == 'w') {
-          $event_type = 'Webinar';
+          $event_type = Civi::settings()->get('zoom_import_webinar');
         }
 
         // Check if this Event already exists
@@ -66,7 +60,7 @@ function civicrm_api3_zoomzoom_importzooms($params) {
             ->addValue('title', $zoom['topic'])
             ->addValue('zoom.zoom_id', $zoom['civicrm_zoom_id'])
             ->addValue('summary', $zoom['topic'])
-            ->addValue('event_type_id:name', $event_type)
+            ->addValue('event_type_id', $event_type)
             ->addValue('is_public', FALSE);
 
           // Set other Zoom fields, if available
