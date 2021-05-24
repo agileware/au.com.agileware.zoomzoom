@@ -168,7 +168,7 @@ function civicrm_api3_zoomzoom_importattendees($params) {
         ->addSelect('zoom.zoom_id')
         ->addSelect('start_date')
         ->addWhere('zoom.zoom_id', 'IS NOT EMPTY')
-        ->addWhere('start_date', '>=', date('Y-m-d', strtotime( $params['day_offset'] . ' days')))
+        ->addWhere('start_date', '>=', date('Y-m-d', strtotime($params['day_offset'] . ' days')))
         ->execute();
 
       foreach ($events as $event) {
@@ -179,23 +179,22 @@ function civicrm_api3_zoomzoom_importattendees($params) {
         if (strtotime($event['start_date']) >= strtotime('Now')) {
 
           // Get registrants future events
-          $participants = CRM_Zoomzoom_Zoom::getRegistrants($api, $zoom_id);
-
-          // Verify the participants exist as contacts and added to the event
-          if (!empty($participants)) {
-            foreach ($participants as $participant) {
+          $registrants = CRM_Zoomzoom_Zoom::getRegistrants($api, $zoom_id);
+          if (!empty($registrants)) {
+            foreach ($registrants as $registrant) {
               // Zoom uses inconsistent field names for registrants and participants
-              $registration_details['registration_date'] = strtotime($participant['create_time']);
-              $registration_details['first_name'] = $participant['first_name'];
-              $registration_details['last_name'] = $participant['last_name'];
-              $registration_details['email'] = $participant['email'];
-              $registration_details['zoom_id'] = $participant['id'];
-              $registration_details['zoom_join_url'] = $participant['join_url'];
+              $registrant_details['registration_date'] = strtotime($registrant['create_time']);
+              $registrant_details['first_name'] = $registrant['first_name'];
+              $registrant_details['last_name'] = $registrant['last_name'];
+              $registrant_details['email'] = $registrant['email'];
+              $registrant_details['zoom_id'] = $registrant['id'];
+              $registrant_details['zoom_join_url'] = $registrant['join_url'];
+              $registrant_details['event'] = $event;
               // @TODO This may actually be 'Pending approval' see CIVIZOOM-8
-              $registration_details['status'] = 'Registered';
-              $registration_details['event'] = $event;
+              $registrant_details['status_id'] = Civi::settings()
+                ->get('zoom_import_status_registration');
 
-              CRM_Zoomzoom_Zoom::updateCiviCRMParticipant($registration_details);
+              CRM_Zoomzoom_Zoom::updateCiviCRMParticipant($registrant_details);
             }
           }
         }
@@ -203,19 +202,36 @@ function civicrm_api3_zoomzoom_importattendees($params) {
         else {
           // Get the past participants
           $participants = CRM_Zoomzoom_Zoom::getPastParticipants($api, $zoom_id);
-          // Verify the participants exist as contacts and added to the event
           if (!empty($participants)) {
             foreach ($participants as $participant) {
               // Zoom uses inconsistent field names for registrants and participants
               $participant_name = explode(' ', trim($participant['name']));
-              $registration_details['registration_date'] = strtotime('Now');
-              $registration_details['first_name'] = $participant_name[0];;
-              $registration_details['last_name'] = $participant_name[1];
-              $registration_details['email'] = trim(strtolower($participant['user_email']));
-              $registration_details['status'] = 'Attended';
-              $registration_details['event'] = $event;
+              $participant_details['registration_date'] = strtotime('Now');
+              $participant_details['first_name'] = $participant_name[0];;
+              $participant_details['last_name'] = $participant_name[1];
+              $participant_details['email'] = $participant['user_email'];
+              $participant_details['event'] = $event;
+              $participant_details['status_id'] = Civi::settings()
+                ->get('zoom_import_status_participant');
 
-              CRM_Zoomzoom_Zoom::updateCiviCRMParticipant($registration_details);
+              CRM_Zoomzoom_Zoom::updateCiviCRMParticipant($participant_details);
+            }
+          }
+          // Get the absentees for webinars
+          if ($api == 'webinars') {
+            $absentees = CRM_Zoomzoom_Zoom:: getAbsentees($zoom_id);
+            if (!empty($absentees)) {
+              foreach ($absentees as $absentee) {
+                $absentee_details['registration_date'] = strtotime($absentee['create_time']);
+                $absentee_details['first_name'] = $absentee['first_name'];
+                $absentee_details['last_name'] = $absentee['last_name'];
+                $absentee_details['email'] = $absentee['email'];
+                $absentee_details['event'] = $event;
+                $absentee_details['status_id'] = Civi::settings()
+                  ->get('zoom_import_status_absentee');
+
+                CRM_Zoomzoom_Zoom::updateCiviCRMParticipant($absentee_details);
+              }
             }
           }
         }

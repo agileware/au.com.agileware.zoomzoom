@@ -158,6 +158,61 @@ class CRM_Zoomzoom_Zoom {
   }
 
   /**
+   * Get absentees for a Zoom Webinar
+   * Zoom API documentation:
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarabsentees
+   * No Zoom API implementation for Meetings
+   *
+   * @param string $api options meeting, webinar
+   * @param string $zoom_id Zoom ID
+   *
+   * @return array|mixed
+   */
+  static function getAbsentees($zoom_id) {
+    $user = self::getOwner();
+    $zoom_api = self::getZoomObject();
+    $absentees = [];
+
+    $params = [
+      'page_size' => 300,
+    ];
+
+    if (!empty($user)) {
+      do {
+
+        /*
+        * Important, Zoom Webinars that have ended have a different UUID - because reasons.
+        * See API https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/pastwebinars
+        * Developer discussion, https://devforum.zoom.us/t/unable-to-retrieve-a-webinar-s-absentees-past-webinars-webinaruuid-absentees/14381/19
+         */
+        $zoom_webinar = $zoom_api->doRequest('GET', '/past_webinars/' . $zoom_id . '/instances', $params, ['userId' => $user['id']]);
+
+        // Get the UUID for the specific Zoom webinar
+        if (!empty($zoom_webinar['webinars'][0]['uuid'])) {
+          $zoom_webinaruuid = urlencode($zoom_webinar['webinars'][0]['uuid']);
+
+          $zoom_absentees = $zoom_api->doRequest('GET', '/past_webinars/' . $zoom_webinaruuid . '/absentees', $params, ['userId' => $user['id']]);
+
+          // Set the next results page token is available otherwise, NULL to exit
+          $params['next_page_token'] = (empty($zoom_absentees['next_page_token'])) ? NULL : $zoom_absentees['next_page_token'];
+
+          // If absentees exist for this Zoom
+          if (!empty($zoom_absentees['registrants'])) {
+            foreach ($zoom_absentees['registrants'] as $key => $zoom_absentee) {
+              // If the absentees has a first_name and last_name then add them to the list
+              // Weirdly, Zoom has been providing absentees which are just email addresses - no idea what they are
+              if (!empty($zoom_absentee['first_name']) && !empty($zoom_absentee['last_name'])) {
+                $absentees[] = $zoom_absentee;
+              }
+            }
+          }
+        }
+      } while (!empty($params['next_page_token']));
+    }
+    return $absentees;
+  }
+
+  /**
    * Get past participants for a Zoom meeting
    * Zoom API documentation:
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/pastmeetingparticipants
@@ -245,11 +300,13 @@ class CRM_Zoomzoom_Zoom {
   static function updateCiviCRMParticipant($registration_details) {
 
     try {
+      $email = trim(strtolower($registration_details['email']));
+
       // @TODO this should really use an unsupervised dedupe rule
       $emails = \Civi\Api4\Email::get()
         ->selectRowCount()
         ->addSelect('contact_id')
-        ->addWhere('email', '=', $registration_details['email'])
+        ->addWhere('email', '=', $email)
         ->setLimit(1)
         ->execute();
 
@@ -262,7 +319,7 @@ class CRM_Zoomzoom_Zoom {
           ->addValue('last_name', $registration_details['last_name'])
           ->addChain('add_email', \Civi\Api4\Email::create()
             ->addValue('contact_id', '$id')
-            ->addValue('email', $registration_details['email'])
+            ->addValue('email', $email)
             ->addValue('is_primary', TRUE)
           )
           ->execute();
@@ -286,7 +343,7 @@ class CRM_Zoomzoom_Zoom {
       if ($existing_participant->rowCount == 1) {
         $results = \Civi\Api4\Participant::update()
           ->addWhere('id', '=', $existing_participant[0]['id'])
-          ->addValue('status_id:name', $registration_details['status'])
+          ->addValue('status_id', $registration_details['status_id'])
           ->addValue('zoom_registrant.registrant_id', $registration_details['zoom_id'])
           ->addValue('zoom_registrant.join_url', $registration_details['zoom_join_url'])
           ->execute();
@@ -301,7 +358,7 @@ class CRM_Zoomzoom_Zoom {
         $results = \Civi\Api4\Participant::create()
           ->addValue('contact_id', $contact_id)
           ->addValue('event_id', $registration_details['event']['id'])
-          ->addValue('status_id:name', $registration_details['status'])
+          ->addValue('status_id', $registration_details['status_id'])
           ->addValue('register_date', $register_date)
           ->addValue('zoom_registrant.registrant_id', $registration_details['zoom_id'])
           ->addValue('zoom_registrant.join_url', $registration_details['zoom_join_url'])
