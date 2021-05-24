@@ -51,4 +51,49 @@ return [
     'is_contact' => 0,
     'settings_pages' => ['zoomzoom' => ['weight' => 10]],
   ],
+  'zoom_import_status_registration' => [
+    'name' => 'zoom_import_status_registration',
+    'group' => 'zoomzoom',
+    'group_name' => 'Zoom Settings',
+    'type' => 'String',
+    'html_type' => 'Select',
+    'pseudoconstant' => [
+      'callback' => 'CRM_Event_PseudoConstant::participantStatus'
+    ],
+    'title' => ts('Zoom Registration, Status'),
+    'is_domain' => 1,
+    'is_contact' => 0,
+    'settings_pages' => ['zoomzoom' => ['weight' => 10]],
+    'description' => ts('Participant Status to be assigned to imported Zoom registrations'),
+  ],
+  'zoom_import_status_participant' => [
+    'name' => 'zoom_import_status_participant',
+    'group' => 'zoomzoom',
+    'group_name' => 'Zoom Settings',
+    'type' => 'String',
+    'html_type' => 'Select',
+    'pseudoconstant' => [
+      'callback' => 'CRM_Event_PseudoConstant::participantStatus'
+    ],
+    'title' => ts('Zoom Participant, Status'),
+    'is_domain' => 1,
+    'is_contact' => 0,
+    'settings_pages' => ['zoomzoom' => ['weight' => 10]],
+    'description' => ts('Participant Status to be assigned to imported Zoom participants'),
+  ],
+  'zoom_import_status_absentee' => [
+    'name' => 'zoom_import_status_absentee',
+    'group' => 'zoomzoom',
+    'group_name' => 'Zoom Settings',
+    'type' => 'String',
+    'html_type' => 'Select',
+    'pseudoconstant' => [
+      'callback' => 'CRM_Event_PseudoConstant::participantStatus'
+    ],
+    'title' => ts('Zoom Absentee, Status'),
+    'is_domain' => 1,
+    'is_contact' => 0,
+    'settings_pages' => ['zoomzoom' => ['weight' => 10]],
+    'description' => ts('Participant Status to be assigned to imported Zoom absentees'),
+  ],
 ];
