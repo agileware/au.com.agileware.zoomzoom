@@ -1,6 +1,6 @@
 <?php
 
-class CRM_CivirulesActions_Participant_ZoomCancelParticipant extends CRM_Civirules_Action {
+class CRM_CivirulesActions_Participant_ZoomDeleteParticipant extends CRM_Civirules_Action {
 
   /**
    * Method processAction to execute the action

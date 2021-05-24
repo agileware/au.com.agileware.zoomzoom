@@ -3,10 +3,10 @@
 This is just another [CiviCRM](https://civicrm.org) extension which integrates with [Zoom](https://zoom.us). Provides the following features:
 
 * CiviRule to create Zoom Webinar from Event and create Zoom Meeting from Event
-* CiviRule to update Zoom from Event
-* CiviRule to delete Zoom from Event
-* CiviRule to add Participant to Zoom
-* CiviRule to cancel Participant in Zoom
+* CiviRule to update Zoom details
+* CiviRule to delete a Zoom
+* CiviRule to add an Event Participant to a Zoom 
+* CiviRule to delete a Participant from a Zoom
 * Scheduled Job to import Zoom Webinars and Zoom Events as CiviCRM Events 
 * Scheduled Job to check Zoom registrations and attendees, record as CiviCRM Participants and update Participant Status, setting to Attended for attendees
 
