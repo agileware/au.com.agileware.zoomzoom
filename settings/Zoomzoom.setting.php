@@ -22,6 +22,7 @@ return [
     'is_domain' => 1,
     'is_contact' => 0,
     'settings_pages' => ['zoomzoom' => ['weight' => 10]],
+    'description' => ts('Zoom JWT API credentials to use for this CiviCRM integration. Create a JWT App in the <a href="https://marketplace.zoom.us/develop/create" target="blank">Zoom Marketplace</a>. For more details read, <a href="https://marketplace.zoom.us/docs/guides/auth/jwt" target="blank">Zoom API, JSON Web Tokens (JWT)</a>.'),
   ],
   'zoom_import_meeting' => [
     'name' => 'zoom_import_meeting',
