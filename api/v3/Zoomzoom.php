@@ -149,7 +149,7 @@ function _civicrm_api3_zoomzoom_importattendees_spec(&$spec) {
 /**
  * zoomzoom.importattendees implementation
  *
- * Import Zoom registrations and attendees for those CiviCRM Events with a Zoom
+ * Import Zoom registrations, attendees and absentees for those CiviCRM Events with a Zoom
  * ID. Checks for CiviCRM Events scheduled after today, offset by a number of
  * days.
  *
