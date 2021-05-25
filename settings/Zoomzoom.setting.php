@@ -29,7 +29,7 @@ return [
     'group' => 'zoomzoom',
     'group_name' => 'Zoom Settings',
     'type' => 'String',
-    'html_type' => 'Select',
+    'html_type' => 'select',
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::eventType'
     ],
@@ -44,7 +44,7 @@ return [
     'group' => 'zoomzoom',
     'group_name' => 'Zoom Settings',
     'type' => 'String',
-    'html_type' => 'Select',
+    'html_type' => 'select',
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::eventType'
     ],
@@ -59,7 +59,7 @@ return [
     'group' => 'zoomzoom',
     'group_name' => 'Zoom Settings',
     'type' => 'String',
-    'html_type' => 'Select',
+    'html_type' => 'select',
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::participantStatus'
     ],
@@ -74,7 +74,7 @@ return [
     'group' => 'zoomzoom',
     'group_name' => 'Zoom Settings',
     'type' => 'String',
-    'html_type' => 'Select',
+    'html_type' => 'select',
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::participantStatus'
     ],
@@ -89,7 +89,7 @@ return [
     'group' => 'zoomzoom',
     'group_name' => 'Zoom Settings',
     'type' => 'String',
-    'html_type' => 'Select',
+    'html_type' => 'select',
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::participantStatus'
     ],
