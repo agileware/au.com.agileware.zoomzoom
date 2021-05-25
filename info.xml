@@ -2,7 +2,7 @@
 <extension key="au.com.agileware.zoomzoom" type="module">
   <file>zoomzoom</file>
   <name>Zoom Zoom</name>
-  <description>Yet another extension for integrating CiviCRM and Zoom. This extension provides CiviRule Actions to create Zoom Webinar or Meeting based on Event Triggers. CiviRule Actions to register and cancel Zoom participants based on Participant Triggers.</description>
+  <description>Yet another extension for integrating CiviCRM and Zoom. This extension provides CiviRule Actions to create Zoom Webinar or Meeting, update Zoom details based on Event Triggers. CiviRule Actions to register, delete Zoom participants based for Participant Triggers.</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Agileware</author>
@@ -14,8 +14,8 @@
     <url desc="Support">https://github.com/agileware/au.com.agileware.zoomzoom/issues</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
-  <releaseDate>2021-05-21</releaseDate>
-  <version>1.4</version>
+  <releaseDate>2021-05-25</releaseDate>
+  <version>1.5</version>
   <develStage>stable</develStage>
   <compatibility>
     <ver>5.0</ver>
