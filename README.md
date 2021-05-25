@@ -12,6 +12,18 @@ This is just another [CiviCRM](https://civicrm.org) extension which integrates w
 
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
+## Getting Started
+
+* Zoom JWT API credentials are required for this CiviCRM Extension. Create a Zoom JWT App in the [Zoom Marketplace](https://marketplace.zoom.us/develop/create).
+* Ensure that the Zoom Account used for the Zoom JWT App has permissions to read/write Zooms. For more details read, [Zoom API, JSON Web Tokens (JWT)](https://marketplace.zoom.us/docs/guides/auth/jwt)
+* In CiviCRM, go to the Zoom Settings page, Administer > Zoom Settings.
+  * Insert the **Zoom JWT API Key** and **Zoom JWT API Secret**.
+  * Set the other options on the Zoom Settings page, as required.
+
+* The following **Scheduled Jobs** are provided:
+  * **Import Zoom Webinars and Meetings** - Enable this Scheduled Job if you want to create CiviCRM Events from Zooms. Specify a day offset to process _Zooms_ with a start date either in the last X days (by providing a negative number) or from a future date. The default day_offset is -90 which will process Zooms with a start date in the last 90 days.
+  * **Import Zoom Registrations, Attendees, Absentees** - Enable this Scheduled Job if you want to create CiviCRM Participant records in CiviCRM from Zoom registrations, attendance and absentees. This job will only process CiviCRM Events which are linked to a Zoom. Specify a day offset to process _Events_ with a start date either in the last X days (by providing a negative number) or from a future date. The default day_offset is -90 which will process Events with a start date in the last 90 days. _Note: As this Scheduled Job checks CiviCRM Events linked to a Zoom, it is a good idea to run this job **after** the **Import Zoom Webinars and Meetings** job_.
+
 ## Credits and acknowledgements
 
 Credit to Lighthouse Consulting and Design, Inc for developing [https://github.com/lcdservices/biz.lcdservices.civizoom](https://github.com/lcdservices/biz.lcdservices.civizoom) which was used as the basis for this new extension.
@@ -45,14 +57,6 @@ install it with the command-line tool [cv](https://github.com/civicrm/cv).
 git clone https://github.com/agileware/au.com.agileware.zoomzoom.git
 cv en zoomzoom
 ```
-
-## Getting Started
-
-@TODO
-
-## Known Issues
-
-@TODO
 
 # About the Authors
 
