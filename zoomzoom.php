@@ -114,8 +114,8 @@ function zoomzoom_civicrm_managed(&$entities) {
     'params' => [
       'version' => 3,
       'run_frequency' => 'Daily',
-      'name' => 'Import Zoom Registrations and Attendees',
-      'description' => 'Import Zoom registrations and attendees for those CiviCRM Events with a Zoom ID',
+      'name' => 'Import Zoom Registrations, Attendees, Absentees',
+      'description' => 'Import Zoom registrations, attendees and absentees for those CiviCRM Events with a Zoom ID',
       'api_entity' => 'Zoomzoom',
       'api_action' => 'importattendees',
       'parameters' => "day_offset=30",
