@@ -101,7 +101,7 @@ function zoomzoom_civicrm_managed(&$entities) {
       'description' => 'Import Zoom Webinars and Zoom Meetings',
       'api_entity' => 'Zoomzoom',
       'api_action' => 'importzooms',
-      'parameters' => "day_offset=30",
+      'parameters' => "day_offset=-90",
       'is_active' => '0',
     ],
   ];
@@ -118,7 +118,7 @@ function zoomzoom_civicrm_managed(&$entities) {
       'description' => 'Import Zoom registrations, attendees and absentees for those CiviCRM Events with a Zoom ID',
       'api_entity' => 'Zoomzoom',
       'api_action' => 'importattendees',
-      'parameters' => "day_offset=30",
+      'parameters' => "day_offset=-90",
       'is_active' => '0',
     ],
   ];
