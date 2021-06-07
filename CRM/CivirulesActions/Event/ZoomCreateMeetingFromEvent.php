@@ -55,9 +55,6 @@ class CRM_CivirulesActions_Event_ZoomCreateMeetingFromEvent extends CRM_Civirule
 
     $params['settings'] = $actionParams;
 
-    // Allow participant to join anytime
-    $params['settings']['jbh_time'] = '0';
-
     // Create the Zoom Meeting
     $zoom_details = CRM_Zoomzoom_Zoom::createZoom('meetings', $params);
 

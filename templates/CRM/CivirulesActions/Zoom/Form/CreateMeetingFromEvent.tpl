@@ -32,6 +32,11 @@
         <div class="clear"></div>
     </div>
     <div class="crm-section">
+        <div class="label">{$form.jbh_time.label}</div>
+        <div class="content">{$form.jbh_time.html}</div>
+        <div class="clear"></div>
+    </div>
+    <div class="crm-section">
         <div class="label">{$form.mute_upon_entry.label}</div>
         <div class="content">{$form.mute_upon_entry.html}</div>
         <div class="clear"></div>

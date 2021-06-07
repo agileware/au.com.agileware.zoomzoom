@@ -18,6 +18,12 @@ class CRM_CivirulesActions_Zoom_Form_CreateMeetingFromEvent extends CRM_Civirule
       'false'=>ts('False'),
     ];
 
+    $zoomMeetingJoinBeforeHost = [
+      '0'=>ts('Allow participant to join anytime'),
+      '5'=>ts('Allow participant to join 5 minutes before meeting start time'),
+      '10'=>ts('Allow participant to join 10 minutes before meeting start time'),
+    ];
+
     $zoomMeetingFieldApprovalType = [
       '0' =>ts('Automatically approve'),
       '1'  =>ts('Manually approve'),
@@ -49,7 +55,11 @@ class CRM_CivirulesActions_Zoom_Form_CreateMeetingFromEvent extends CRM_Civirule
 
     $this->add('select', 'host_video', ts('Start video when host joins webinar'), $zoomMeetingFieldTrueFalse, TRUE);
     $this->add('select', 'participant_video', ts('Start video when participants join the meeting'),$zoomMeetingFieldTrueFalse, TRUE);
+
     $this->add('select', 'join_before_host', ts('Allow participants to join the meeting before the host starts the meeting'), $zoomMeetingFieldTrueFalse, TRUE);
+    // @TODO This field should be conditionally shown in join_before_host is TRUE
+    $this->add('select', 'jbh_time', ts('Indicate time limits within which a participant may join a meeting before a host. Only applicable if participants can join before the host'), $zoomMeetingJoinBeforeHost, TRUE);
+
     $this->add('select', 'mute_upon_entry', ts('Mute participants upon entry'), $zoomMeetingFieldTrueFalse, TRUE);
     $this->add('select', 'watermark', ts('Add watermark when viewing a shared screen'), $zoomMeetingFieldTrueFalse, TRUE);
     $this->add('select', 'use_pmi', ts('Use Personal Meeting ID instead of an automatically generated meeting ID'), $zoomMeetingFieldTrueFalse, TRUE);
