@@ -36,11 +36,6 @@ class CRM_CivirulesActions_Zoom_Form_CreateMeetingFromEvent extends CRM_Civirule
       'none' =>ts('Recording disabled'),
     ];
 
-    $zoomWebinarFieldQaAnswerQuestions = [
-      'only'=>ts('Attendees are able to view answered questions only'),
-      'all'=>ts('Attendees are able to view all questions submitted in the Q&A'),
-    ];
-
     $this->add('hidden', 'rule_action_id');
 
     $this->add('text', 'duration', ts('Webinar duration (minutes). Used for scheduled webinars only'), [], TRUE);
