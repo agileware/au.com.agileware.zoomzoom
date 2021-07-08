@@ -23,7 +23,6 @@ class CRM_Zoomzoom_Constants {
     'join_before_host',
     'mute_upon_entry',
     'watermark',
-    'use_pmi',
     'approval_type',
     'audio',
     'auto_recording',

@@ -47,11 +47,6 @@
         <div class="clear"></div>
     </div>
     <div class="crm-section">
-        <div class="label">{$form.use_pmi.label}</div>
-        <div class="content">{$form.use_pmi.html}</div>
-        <div class="clear"></div>
-    </div>
-    <div class="crm-section">
         <div class="label">{$form.approval_type.label}</div>
         <div class="content">{$form.approval_type.html}</div>
         <div class="clear"></div>

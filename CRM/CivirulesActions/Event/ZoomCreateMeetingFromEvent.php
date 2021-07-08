@@ -53,6 +53,9 @@ class CRM_CivirulesActions_Event_ZoomCreateMeetingFromEvent extends CRM_Civirule
       unset($actionParams['global_dial_in_countries']);
     }
 
+    // This option must be set to false, otherwise cannot enable meeting registrations or register meeting attendees
+    $actionParams['use_pmi'] = 'false';
+
     $params['settings'] = $actionParams;
 
     // Create the Zoom Meeting

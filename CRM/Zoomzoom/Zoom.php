@@ -122,7 +122,7 @@ class CRM_Zoomzoom_Zoom {
   static function createZoom($api, $params) {
     $user = self::getOwner();
     $zoom_api = self::getZoomObject();
-    $json = json_encode($params);
+    $json = json_encode($params, JSON_NUMERIC_CHECK);
 
     if (!empty($user)) {
       $response = $zoom_api->doRequest('POST', '/users/{userId}/' . $api, [],
@@ -443,7 +443,7 @@ class CRM_Zoomzoom_Zoom {
    */
   static function createZoomRegistration($civicrm_zoom_id, $participant_id, $params) {
     $zoom_api = self::getZoomObject();
-    $json = json_encode($params);
+    $json = json_encode($params, JSON_NUMERIC_CHECK);
 
     $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($civicrm_zoom_id);
     $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($civicrm_zoom_id);
@@ -510,7 +510,7 @@ class CRM_Zoomzoom_Zoom {
    */
   static function updateZoom($civicrm_zoom_id, $params) {
     $zoom_api = self::getZoomObject();
-    $json = json_encode($params);
+    $json = json_encode($params,JSON_NUMERIC_CHECK);
 
     $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($civicrm_zoom_id);
     $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($civicrm_zoom_id);

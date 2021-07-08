@@ -62,7 +62,6 @@ class CRM_CivirulesActions_Zoom_Form_CreateMeetingFromEvent extends CRM_Civirule
 
     $this->add('select', 'mute_upon_entry', ts('Mute participants upon entry'), $zoomMeetingFieldTrueFalse, TRUE);
     $this->add('select', 'watermark', ts('Add watermark when viewing a shared screen'), $zoomMeetingFieldTrueFalse, TRUE);
-    $this->add('select', 'use_pmi', ts('Use Personal Meeting ID instead of an automatically generated meeting ID'), $zoomMeetingFieldTrueFalse, TRUE);
 
     $this->add('select', 'approval_type', ts('Approval type'),$zoomMeetingFieldApprovalType, TRUE);
     $this->add('select', 'audio', ts('Determine how participants can join the audio portion of the meeting'), $zoomMeetingFieldAudio, TRUE);
