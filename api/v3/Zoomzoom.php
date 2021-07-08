@@ -250,3 +250,31 @@ function civicrm_api3_zoomzoom_importattendees($params) {
     return civicrm_api3_create_error($errorMessage);
   }
 }
+
+
+function _civicrm_api3_zoomzoom_fixzooms_spec(&$spec) {
+return $spec;
+}
+
+/**
+ * zoomzoom.importzooms implementation
+ *
+ * Import Zoom Webinars and Zoom Meetings.
+ * Checks for Zooms scheduled after today, offset by a number of days.
+ *
+ * @param array $spec description of fields supported by this API call
+ *
+ * @return civicrm_api3_create_success|civicrm_api3_create_error
+ *
+ * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
+ */
+function civicrm_api3_zoomzoom_fixzooms($params) {
+  try {
+  CRM_Zoomzoom_Zoom::fixZooms();
+  } catch (Exception $e) {
+    $errorMessage = $e->getMessage();
+    CRM_Core_Error::debug_var('Zoomzoom::fixZooms', $errorMessage);
+    CRM_Core_Error::debug_var('Zoomzoom::fixZooms', $params);
+  }
+  return civicrm_api3_create_success(TRUE, $params, 'Zoomzoom', 'fixZooms');
+}

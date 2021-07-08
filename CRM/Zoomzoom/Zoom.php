@@ -557,6 +557,7 @@ class CRM_Zoomzoom_Zoom {
     if ($zoom_api->responseCode() != '200' && $zoom_api->responseCode() != '204') {
       // Zoom could not be deleted for some reason
       CRM_Core_Error::debug_log_message('Unable to delete Zoom ' . $api);
+      CRM_Core_Error::debug_log_message('Zoom ID: ' . $zoom_id);
       CRM_Core_Error::debug_var('Zoom API Params', $json);
       CRM_Core_Error::debug_var('Zoom API Response Code', $zoom_api->responseCode());
       return FALSE;
@@ -566,5 +567,161 @@ class CRM_Zoomzoom_Zoom {
     }
   }
 
+  /**
+   * Gets a single Zoom using provided Zoom ID
+   * Zoom API documentation:
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meeting
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinar
+   *
+   * @param $civicrm_zoom_id Zoom ID in format of m1234567 or w1234567
+   *
+   * @return array Zoom values
+   */
+  static function getZoom($civicrm_zoom_id) {
+    $zoom_api = self::getZoomObject();
+
+    $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($civicrm_zoom_id);
+    $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($civicrm_zoom_id);
+
+    $zoom = $zoom_api->doRequest('GET', '/' . $api . '/{zoomId}', [],
+      ['zoomId' => $zoom_id]);
+
+    if ($zoom_api->responseCode() != '200') {
+      // Get failed for Zoom for some reason
+      CRM_Core_Error::debug_log_message('Unable to get Zoom ' . $api);
+      CRM_Core_Error::debug_var('Zoom ID: ', $zoom_id);
+      CRM_Core_Error::debug_var('Zoom API Response Code', $zoom_api->responseCode());
+      return FALSE;
+    }
+    else {
+      return $zoom;
+    }
+  }
+
+  // Clear out incorrect Zooms
+  static function fixZooms() {
+    // Get a list of all Events with Zoom ID set
+
+    $zoom_skip [] = '89573996340';
+    $zoom_skip [] = '84732507367';
+    $zoom_skip [] = '83751250868';
+    $zoom_skip [] = '88346870791';
+    $zoom_skip [] = '82332533655';
+    $zoom_skip [] = '88049566573';
+    $zoom_skip [] = '87202790148';
+    $zoom_skip [] = '83941957378';
+    $zoom_skip [] = '82253265482';
+    $zoom_skip [] = '83842800416';
+    $zoom_skip [] = '83543385557';
+    $zoom_skip [] = '81953186416';
+    $zoom_skip [] = '81938740871';
+    $zoom_skip [] = '86365042560';
+    $zoom_skip [] = '89942821244';
+    $zoom_skip [] = '86203601225';
+    $zoom_skip [] = '88390362431';
+    $zoom_skip [] = '82250799370';
+    $zoom_skip [] = '82044865817';
+    $zoom_skip [] = '86360732392';
+    $zoom_skip [] = '81143060663';
+    $zoom_skip [] = '89914255835';
+    $zoom_skip [] = '83152539202';
+    $zoom_skip [] = '85224767328';
+    $zoom_skip [] = '87863480717';
+
+    $events = \Civi\Api4\Event::get()
+      ->addSelect('id', 'zoom.zoom_id')
+      ->addWhere('zoom.zoom_id', 'IS NOT EMPTY')
+      ->addOrderBy('created_date', 'ASC')
+      ->setLimit(0)
+      ->execute();
+
+    foreach ($events as $event) {
+      $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($event['zoom.zoom_id']);
+      $civicrm_zoom_id = $event['zoom.zoom_id'];
+      $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($event['zoom.zoom_id']);
+
+      if (empty($civicrm_zoom_id)) {
+        continue;
+      }
+
+      // Get the Zoom
+      $zoom = CRM_Zoomzoom_Zoom::getZoom($civicrm_zoom_id);
+
+      $civicrm_created_zoom = FALSE;
+
+      if ($zoom) {
+        // Check the details of the Zoom
+        if ($api == 'meetings') {
+          // Check meeting details
+          if (trim(strtolower($zoom['agenda'])) == trim(strtolower($zoom['topic'])) &&
+            $zoom['duration'] == 120 &&
+            $zoom['host_email'] == 'admin@wesnet.org.au' &&
+            $zoom['settings']['join_before_host'] == TRUE &&
+            $zoom['settings']['host_video'] == FALSE &&
+            $zoom['settings']['participant_video'] == FALSE &&
+            $zoom['settings']['use_pmi'] == TRUE &&
+            $zoom['settings']['registrants_email_notification'] == FALSE &&
+            $zoom['settings']['meeting_authentication'] == TRUE &&
+            $zoom['settings']['watermark'] == TRUE
+          ) {
+            $civicrm_created_zoom = TRUE;
+          }
+        }
+        else {
+          // Check webinar details
+          if (trim(strtolower($zoom['agenda'])) == trim(strtolower($zoom['topic'])) &&
+            $zoom['type'] == 5 &&
+            $zoom['duration'] == 120 &&
+            $zoom['host_email'] == 'admin@wesnet.org.au' &&
+            $zoom['settings']['approval_type'] == 0 &&
+            $zoom['settings']['host_video'] == FALSE &&
+            $zoom['settings']['participant_video'] == FALSE &&
+            $zoom['settings']['auto_recording'] == 'local' &&
+            $zoom['settings']['registrants_email_notification'] == FALSE &&
+            $zoom['settings']['meeting_authentication'] == TRUE
+          ) {
+            $civicrm_created_zoom = TRUE;
+          }
+        }
+
+        if ($civicrm_created_zoom) {
+          // deleteZoom($civicrm_zoom_id){
+
+          /*
+                    \Civi\Api4\Event::update()
+                      ->addWhere('id', '=', $event['id'])
+                      ->addValue('zoom.zoom_id', '')
+                      ->addValue('zoom.password', '')
+                      ->addValue('zoom.start_url', '')
+                      ->addValue('zoom.join_url', '')
+                      ->addValue('zoom.registration_url', '')
+                      ->addValue('zoom.global_dial_in_numbers', '')
+                      ->execute();
+          */
+          $reports [] = 'Delete Zoom ID: ' . $civicrm_zoom_id;
+          //$reports [] = json_encode($zoom);
+
+          // Last check, confirm ID not same as a skip ID
+          if (!array_search($zoom['id'], $zoom_skip)) {
+            // OK to delete Zoom
+            CRM_Zoomzoom_Zoom::deleteZoom($civicrm_zoom_id);
+            $reports [] = 'Confirmed OK delete, Zoom ID: ' . $civicrm_zoom_id;
+          } else {
+            $reports [] = 'Match skip, Zoom ID: ' . $civicrm_zoom_id;
+          }
+
+        }
+        // Log that this Zoom has been skipped
+        else {
+          $reports [] = 'Skipped deletion of Zoom ID: ' . $civicrm_zoom_id;
+          //$reports [] = json_encode($zoom);
+        }
+      }
+    }
+    \Civi::log()->info('Fix Zooms Report');
+    foreach ($reports as $report) {
+      \Civi::log()->info($report);
+    }
+  }
 }
 
