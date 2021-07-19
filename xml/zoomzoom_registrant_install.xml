@@ -43,6 +43,7 @@
       <label>Join URL</label>
       <data_type>Link</data_type>
       <html_type>Link</html_type>
+      <is_searchable>1</is_searchable>
       <is_search_range>0</is_search_range>
       <weight>2</weight>
       <is_active>1</is_active>
