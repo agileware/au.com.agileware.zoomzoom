@@ -45,7 +45,7 @@
             <label>Zoom Password</label>
             <data_type>String</data_type>
             <html_type>Text</html_type>
-            <is_searchable>0</is_searchable>
+            <is_searchable>1</is_searchable>
             <is_search_range>0</is_search_range>
             <weight>2</weight>
             <is_active>1</is_active>
@@ -62,7 +62,7 @@
             <label>Zoom Start URL</label>
             <data_type>Memo</data_type>
             <html_type>TextArea</html_type>
-            <is_searchable>0</is_searchable>
+            <is_searchable>1</is_searchable>
             <is_search_range>0</is_search_range>
             <weight>3</weight>
             <is_active>1</is_active>
@@ -78,7 +78,7 @@
             <label>Zoom Join URL</label>
             <data_type>Memo</data_type>
             <html_type>TextArea</html_type>
-            <is_searchable>0</is_searchable>
+            <is_searchable>1</is_searchable>
             <is_search_range>0</is_search_range>
             <weight>4</weight>
             <is_active>1</is_active>
@@ -94,7 +94,7 @@
             <label>Zoom Registration URL</label>
             <data_type>Memo</data_type>
             <html_type>TextArea</html_type>
-            <is_searchable>0</is_searchable>
+            <is_searchable>1</is_searchable>
             <is_search_range>0</is_search_range>
             <weight>5</weight>
             <is_active>1</is_active>
@@ -110,7 +110,7 @@
             <label>Zoom Dial-in Numbers</label>
             <data_type>Memo</data_type>
             <html_type>RichTextEditor</html_type>
-            <is_searchable>0</is_searchable>
+            <is_searchable>1</is_searchable>
             <is_search_range>0</is_search_range>
             <weight>6</weight>
             <is_active>1</is_active>
