@@ -23,10 +23,11 @@
     <CustomFields>
         <CustomField>
             <name>zoom_id</name>
-            <label>Zoom ID</label>
+            <label>CiviCRM Zoom ID</label>
+            <help_pre>CiviCRM internal Zoom ID which includes a "m" or "w" prefix and the Zoom ID. Use the Participant Zoom ID for referring to a Zoom.</help_pre>
             <data_type>String</data_type>
             <html_type>Text</html_type>
-            <is_searchable>1</is_searchable>
+            <is_searchable>0</is_searchable>
             <is_search_range>0</is_search_range>
             <weight>1</weight>
             <is_active>1</is_active>
