@@ -26,6 +26,7 @@
       <label>Zoom ID</label>
       <data_type>String</data_type>
       <html_type>Text</html_type>
+      <is_required>0</is_required>
       <is_searchable>1</is_searchable>
       <is_search_range>0</is_search_range>
       <weight>1</weight>
@@ -43,6 +44,7 @@
       <label>Registrant ID</label>
       <data_type>String</data_type>
       <html_type>Text</html_type>
+      <is_required>0</is_required>
       <is_searchable>1</is_searchable>
       <is_search_range>0</is_search_range>
       <weight>1</weight>
@@ -60,6 +62,7 @@
       <label>Join URL</label>
       <data_type>Link</data_type>
       <html_type>Link</html_type>
+      <is_required>0</is_required>
       <is_searchable>1</is_searchable>
       <is_search_range>0</is_search_range>
       <weight>2</weight>
