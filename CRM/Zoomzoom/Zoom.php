@@ -453,22 +453,14 @@ class CRM_Zoomzoom_Zoom {
 
     // If Zoom accepted the registration, as indicated by no error code in the response
     if (!empty($response['registrant_id'])) {
-      try {
         // Record the Zoom details for the registration
         // SQL query required to prevent CiviRules recursion due to Participant changed trigger
-        CRM_Core_DAO::executeQuery('UPDATE civicrm_value_zoom_registrant SET `zoom_id` = %1, `registrant_id` = %2, `join_url` = %3 WHERE civicrm_value_zoom_registrant.entity_id = %4', [
+        CRM_Core_DAO::executeQuery('REPLACE INTO civicrm_value_zoom_registrant (`zoom_id`, `registrant_id`, `join_url`, `entity_id`) VALUES(%1, %2, %3, %4)', [
           '1' => [$zoom_id, 'String'],
           '2' => [$response['registrant_id'], 'String'],
           '3' => [$response['join_url'], 'String'],
           '4' => [$participant_id, 'Integer'],
         ]);
-      } catch (API_Exception $e) {
-        $errorMessage = $e->getMessage();
-        CRM_Core_Error::debug_var('Zoomzoom::createZoomRegistration', $errorMessage);
-        CRM_Core_Error::debug_var('Zoomzoom::createZoomRegistration', $response);
-        CRM_Core_Error::debug_var('Zoomzoom::createZoomRegistration', $zoom_api->responseCode());
-        return FALSE;
-      }
     }
 
     return $zoom_api->responseCode();

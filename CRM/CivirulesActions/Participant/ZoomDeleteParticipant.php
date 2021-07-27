@@ -35,7 +35,7 @@ class CRM_CivirulesActions_Participant_ZoomDeleteParticipant extends CRM_Civirul
 
       // Remove the Zoom details from the registration
       // SQL query required to prevent CiviRules recursion due to Participant changed trigger
-      CRM_Core_DAO::executeQuery('UPDATE civicrm_value_zoom_registrant SET `zoom_id` = NULL, `registrant_id` = NULL, `join_url` = NULL WHERE civicrm_value_zoom_registrant.entity_id = %1', [
+      CRM_Core_DAO::executeQuery('REPLACE INTO civicrm_value_zoom_registrant (`zoom_id`, `registrant_id`, `join_url`, `entity_id`) VALUES(NULL, NULL, NULL, %1)', [
         '1' => [$participant_id, 'Integer'],
       ]);
     }
