@@ -33,6 +33,20 @@ class CRM_CivirulesActions_Event_ZoomDeleteFromEvent extends CRM_Civirules_Actio
         ->addValue('zoom.global_dial_in_numbers', '')
         ->execute();
     }
+
+    // Remove Zoom information from all related Participant records
+    $participant_records = \Civi\Api4\Participant::get()
+      ->addSelect('id')
+      ->addWhere('event_id', '=', $event['id'])
+      ->execute();
+
+    foreach ($participant_records as $participant_record) {
+      // Remove the Zoom details from the Participant
+      // SQL query required to prevent CiviRules recursion due to Participant changed trigger
+      CRM_Core_DAO::executeQuery('REPLACE INTO civicrm_value_zoom_registrant (`zoom_id`, `registrant_id`, `join_url`, `entity_id`) VALUES(NULL, NULL, NULL, %1)', [
+        '1' => [$participant_record['id'], 'Integer'],
+      ]);
+    }
   }
 
   /**
