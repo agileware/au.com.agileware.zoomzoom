@@ -191,7 +191,7 @@ function zoomzoom_civicrm_navigationMenu(&$menu) {
     'label' => E::ts('Zoom Settings'),
     'name' => 'zoomzoom_settings',
     'url' => 'civicrm/admin/setting/zoomzoom',
-    'permission' => 'access CiviEvent',
+    'permission' => 'administer CiviCRM',
     'operator' => 'OR',
     'separator' => 0,
   ]);
