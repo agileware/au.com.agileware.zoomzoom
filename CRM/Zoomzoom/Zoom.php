@@ -2,6 +2,8 @@
 
 //https://marketplace.zoom.us/docs/api-reference/zoom-api/
 
+use CRM_Zoomzoom_ExtensionUtil as E;
+
 class CRM_Zoomzoom_Zoom {
 
   /**
@@ -16,18 +18,17 @@ class CRM_Zoomzoom_Zoom {
       return $zoom;
     }
 
-    $apiKey = Civi::settings()->get('zoom_api_key');
-    $apiSecret = Civi::settings()->get('zoom_api_secret');
+    $accountID = Civi::settings()->get('zoom_account_id')
+    $clientKey = Civi::settings()->get('zoom_client_key');
+    $clientSecret = Civi::settings()->get('zoom_client_secret');
 
     if (empty($apiKey) || empty($apiSecret)) {
       return NULL;
     }
 
-    $extPath = Civi::resources()
-      ->getPath(CRM_Zoomzoom_ExtensionUtil::LONG_NAME);
-    require_once $extPath . '/packages/ZoomAPIWrapper/ZoomAPIWrapper.php';
+    require_once E::path('packages/ZoomAPIWrapper/ZoomAPIWrapper.php');
 
-    $zoom = new ZoomAPIWrapper($apiKey, $apiSecret);
+    $zoom = ZoomAPIWrapper::init($accountID, $clientKey, $clientSecret);
 
     return $zoom;
   }

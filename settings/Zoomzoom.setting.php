@@ -1,28 +1,42 @@
 <?php
 
+use CRM_Zoomzoom_ExtensionUtil as E
+
 return [
-  'zoom_api_key' => [
-    'name' => 'zoom_api_key',
+  'zoom_client_id' => [
+    'name' => 'zoom_account_id',
     'group' => 'zoomzoom',
     'group_name' => 'Zoom Settings',
     'type' => 'String',
     'html_type' => 'text',
-    'title' => ts('Zoom JWT API Key'),
+    'title' => E::ts('Zoom Account ID')
     'is_domain' => 1,
     'is_contact' => 0,
-    'settings_pages' => ['zoomzoom' => ['weight' => 10]],
+    'settings_pages' => ['zoomzoom' => ['weight' => 8]],
+
   ],
-  'zoom_api_secret' => [
-    'name' => 'zoom_api_secret',
+  'zoom_client_key' => [
+    'name' => 'zoom_client_key',
     'group' => 'zoomzoom',
     'group_name' => 'Zoom Settings',
     'type' => 'String',
     'html_type' => 'text',
-    'title' => ts('Zoom JWT API Secret'),
+    'title' => E::ts('Zoom OAuth Client Key'),
+    'is_domain' => 1,
+    'is_contact' => 0,
+    'settings_pages' => ['zoomzoom' => ['weight' => 9]],
+  ],
+  'zoom_client_secret' => [
+    'name' => 'zoom_client_secret',
+    'group' => 'zoomzoom',
+    'group_name' => 'Zoom Settings',
+    'type' => 'String',
+    'html_type' => 'text',
+    'title' => E::ts('Zoom OAuth Client Secret'),
     'is_domain' => 1,
     'is_contact' => 0,
     'settings_pages' => ['zoomzoom' => ['weight' => 10]],
-    'description' => ts('Zoom JWT API credentials to use for this CiviCRM integration. Create a JWT App in the <a href="https://marketplace.zoom.us/develop/create" target="blank">Zoom Marketplace</a>. For more details read, <a href="https://marketplace.zoom.us/docs/guides/auth/jwt" target="blank">Zoom API, JSON Web Tokens (JWT)</a>.'),
+    'description' => E::ts('Zoom OAuth API credentials to use for this CiviCRM integration. Create a Sever-to-Server OAuth app in the <a href="https://marketplace.zoom.us/develop/create" target="_blank">Zoom Marketplace</a>. For more details read, <a href="https://developers.zoom.us/docs/internal-apps/create/" target="_blank">Create a Server-to-Server OAuth app</a>.'),
   ],
   'zoom_import_meeting' => [
     'name' => 'zoom_import_meeting',
@@ -33,11 +47,11 @@ return [
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::eventType'
     ],
-    'title' => ts('Zoom Meeting, Event Type'),
+    'title' => E::ts('Zoom Meeting, Event Type'),
     'is_domain' => 1,
     'is_contact' => 0,
     'settings_pages' => ['zoomzoom' => ['weight' => 10]],
-    'description' => ts('Event Type to assign to Events imported a Zoom Meeting'),
+    'description' => E::ts('Event Type to assign to Events imported a Zoom Meeting'),
   ],
   'zoom_import_webinar' => [
     'name' => 'zoom_import_webinar',
@@ -48,11 +62,11 @@ return [
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::eventType'
     ],
-    'title' => ts('Zoom Webinar, Event Type'),
+    'title' => E::ts('Zoom Webinar, Event Type'),
     'is_domain' => 1,
     'is_contact' => 0,
     'settings_pages' => ['zoomzoom' => ['weight' => 10]],
-    'description' => ts('Event Type to assign to Events imported a Zoom Webinar'),
+    'description' => E::ts('Event Type to assign to Events imported a Zoom Webinar'),
   ],
   'zoom_import_status_registration' => [
     'name' => 'zoom_import_status_registration',
@@ -63,11 +77,11 @@ return [
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::participantStatus'
     ],
-    'title' => ts('Zoom Registration, Status'),
+    'title' => E::ts('Zoom Registration, Status'),
     'is_domain' => 1,
     'is_contact' => 0,
     'settings_pages' => ['zoomzoom' => ['weight' => 10]],
-    'description' => ts('Participant Status to be assigned to imported Zoom registrations'),
+    'description' => E::ts('Participant Status to be assigned to imported Zoom registrations'),
   ],
   'zoom_import_status_participant' => [
     'name' => 'zoom_import_status_participant',
@@ -78,11 +92,11 @@ return [
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::participantStatus'
     ],
-    'title' => ts('Zoom Participant, Status'),
+    'title' => E::ts('Zoom Participant, Status'),
     'is_domain' => 1,
     'is_contact' => 0,
     'settings_pages' => ['zoomzoom' => ['weight' => 10]],
-    'description' => ts('Participant Status to be assigned to imported Zoom participants'),
+    'description' => E::ts('Participant Status to be assigned to imported Zoom participants'),
   ],
   'zoom_import_status_absentee' => [
     'name' => 'zoom_import_status_absentee',
@@ -93,10 +107,10 @@ return [
     'pseudoconstant' => [
       'callback' => 'CRM_Event_PseudoConstant::participantStatus'
     ],
-    'title' => ts('Zoom Absentee, Status'),
+    'title' => E::ts('Zoom Absentee, Status'),
     'is_domain' => 1,
     'is_contact' => 0,
     'settings_pages' => ['zoomzoom' => ['weight' => 10]],
-    'description' => ts('Participant Status to be assigned to imported Zoom absentees'),
+    'description' => E::ts('Participant Status to be assigned to imported Zoom absentees'),
   ],
 ];
