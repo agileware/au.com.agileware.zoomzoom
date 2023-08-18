@@ -32,6 +32,8 @@ class CRM_Zoomzoom_Zoom {
 
   /**
    * Get the Zoom account owner for the current Zoom JWT
+   * 
+   * OAuth scopes required: user:read:admin
    *
    * @return mixed
    */
@@ -64,6 +66,8 @@ class CRM_Zoomzoom_Zoom {
    * Zoom API documentation:
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinars
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetings
+   * 
+   * OAuth scopes required: {webinar,meeting}:read:admin
    *
    * @param string $api use values: meeting, webinar
    * @param int $day_offset
@@ -111,6 +115,8 @@ class CRM_Zoomzoom_Zoom {
    * Zoom API documentation:
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarcreate
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
+   * 
+   * OAuth scopes required: {webinar,meeting}:write:admin
    *
    * @param string $params see Zoom documentation for parameters
    *
@@ -160,6 +166,8 @@ class CRM_Zoomzoom_Zoom {
    * Zoom API documentation:
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarabsentees
    * No Zoom API implementation for Meetings
+   * 
+   * OAuth scopes required: webinar:read:admin
    *
    * @param string $api options meeting, webinar
    * @param string $zoom_id Zoom ID
@@ -216,6 +224,8 @@ class CRM_Zoomzoom_Zoom {
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/pastmeetingparticipants
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/listwebinarparticipants
    *
+   * OAuth scopes required: {webinar,meeting}:read:admin
+   * 
    * @param string $api options meeting, webinar
    * @param string $zoom_id Zoom ID
    *
@@ -431,6 +441,8 @@ class CRM_Zoomzoom_Zoom {
    * Zoom API documentation:
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarregistrantcreate
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingregistrantcreate
+   * 
+   * OAuth scopes required: {webinar,meeting}:write:admin
    *
    * @param string $civicrm_zoom_id Zoom ID in format of m1234567 or
    *   w1234567
@@ -470,6 +482,8 @@ class CRM_Zoomzoom_Zoom {
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/deletewebinarregistrant
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingregistrantdelete
    *
+   * OAuth scopes required: {webinar,meeting}:write:admin
+   * 
    * @param string $civicrm_zoom_id Zoom ID in format of m1234567 or
    *   w1234567
    * @param string $registrant_id the Zoom Registrant ID
@@ -493,6 +507,8 @@ class CRM_Zoomzoom_Zoom {
    * Zoom API documentation:
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingupdate
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarupdate
+   * 
+   * OAuth scopes required: {webinar,meeting}:write:admin
    *
    * @param $civicrm_zoom_id Zoom ID in format of m1234567 or w1234567
    * @param $params array values for the Zoom
@@ -526,6 +542,8 @@ class CRM_Zoomzoom_Zoom {
    * Zoom API documentation:
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingdelete
    * https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinardelete
+   * 
+   * OAuth scopes required: {webinar,meeting}:write:admin
    *
    * @param $civicrm_zoom_id Zoom ID in format of m1234567 or w1234567
    *
