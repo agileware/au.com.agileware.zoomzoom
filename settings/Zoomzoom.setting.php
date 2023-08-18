@@ -1,19 +1,18 @@
 <?php
 
-use CRM_Zoomzoom_ExtensionUtil as E
+use CRM_Zoomzoom_ExtensionUtil as E;
 
 return [
-  'zoom_client_id' => [
+  'zoom_account_id' => [
     'name' => 'zoom_account_id',
     'group' => 'zoomzoom',
     'group_name' => 'Zoom Settings',
     'type' => 'String',
     'html_type' => 'text',
-    'title' => E::ts('Zoom Account ID')
+    'title' => E::ts('Zoom Account ID'),
     'is_domain' => 1,
     'is_contact' => 0,
     'settings_pages' => ['zoomzoom' => ['weight' => 8]],
-
   ],
   'zoom_client_key' => [
     'name' => 'zoom_client_key',

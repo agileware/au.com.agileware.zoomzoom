@@ -5,6 +5,7 @@
 use CRM_Zoomzoom_ExtensionUtil as E;
 
 class CRM_Zoomzoom_Zoom {
+  static $zoom;
 
   /**
    * Initialise a Zoom object for API calls
@@ -12,25 +13,21 @@ class CRM_Zoomzoom_Zoom {
    * @return ZoomAPIWrapper|null
    */
   static function getZoomObject() {
-    static $zoom;
+    if (is_null(self::$zoom)) {
+      $accountID = Civi::settings()->get('zoom_account_id');
+      $clientKey = Civi::settings()->get('zoom_client_key');
+      $clientSecret = Civi::settings()->get('zoom_client_secret');
 
-    if (!is_null($zoom)) {
-      return $zoom;
+      if (empty($clientKey) || empty($clientSecret)) {
+        return NULL;
+      }
+
+      require_once E::path('packages/ZoomAPIWrapper/ZoomAPIWrapper.php');
+
+      self::$zoom = ZoomAPIWrapper::init($accountID, $clientKey, $clientSecret);
     }
-
-    $accountID = Civi::settings()->get('zoom_account_id')
-    $clientKey = Civi::settings()->get('zoom_client_key');
-    $clientSecret = Civi::settings()->get('zoom_client_secret');
-
-    if (empty($apiKey) || empty($apiSecret)) {
-      return NULL;
-    }
-
-    require_once E::path('packages/ZoomAPIWrapper/ZoomAPIWrapper.php');
-
-    $zoom = ZoomAPIWrapper::init($accountID, $clientKey, $clientSecret);
-
-    return $zoom;
+    
+    return self::$zoom;
   }
 
   /**
