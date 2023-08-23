@@ -16,6 +16,13 @@ This is just another [CiviCRM](https://civicrm.org) extension which integrates w
 
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
+## Migrating from a JWT App
+
+JWT Apps are deprecated on Zoom, so to ensure continued function this app has been converted to use
+OAuth Server-to-Server. Existing installations configured to use a JWT App will need to create
+and connect to a new app according to the instructions in the [Getting Started](#getting-started) 
+section below.
+
 ## Getting Started
 
 1. Zoom OAuth Server-to-Server credentials are required for this Integration. Create an OAuth
@@ -51,8 +58,7 @@ The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
 Credit to Lighthouse Consulting and Design, Inc for developing
 [https://github.com/lcdservices/biz.lcdservices.civizoom](https://github.com/lcdservices/biz.lcdservices.civizoom)
-which was used as the basis for this new extension.  Credit to Veda
-Consulting for developing
+which was used as the basis for this new extension.  Credit to Veda Consulting for developing
 [https://github.com/veda-consulting-company/ncn-civi-zoom](https://github.com/veda-consulting-company/ncn-civi-zoom)
 which was used as reference for the CiviRules implementation.
 

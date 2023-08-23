@@ -74,9 +74,6 @@ function zoomzoom_civicrm_disable() {
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_upgrade
  */
 function zoomzoom_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
-  // @TODO This is executing everytime, refactor to be an upgrade
-  CRM_Civirules_Utils_Upgrader::insertActionsFromJson(__DIR__ . '/civirules.json');
-
   return _zoomzoom_civix_civicrm_upgrade($op, $queue);
 }
 
@@ -196,4 +193,52 @@ function zoomzoom_civicrm_navigationMenu(&$menu) {
     'separator' => 0,
   ]);
   _zoomzoom_civix_navigationMenu($menu);
+}
+
+/**
+ * Implements hook_civicrm_check().
+ * 
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_check
+ * 
+ * @param $messages array
+ * @param $statusNames array
+ * @param $includeDisabled bool
+ */
+function zoomzoom_civicrm_check(&$messages, $statusNames, $includeDisabled) {
+  static $msgID = 'zoomzoomOAuthTokenSetup';
+  if ($statusNames && !inArray($msgID, $statusNames)) {
+    return;
+  }
+
+  if(!$includeDisabled && (Civi\Api4\StatusPreference::get(FALSE)
+      ->addWhere('is_active', '=', FALSE)
+      ->addWhere('domain_id', '=', 'current_domain')
+      ->addWhere('name', '=', $msgID)
+      ->execute()->count())) {
+    return;
+  } 
+
+  $accountID = Civi::settings()->get('zoom_account_id') ?? FALSE;
+  $clientKey = Civi::settings()->get('zoom_client_key') ?? FALSE;
+  $clientSecret = Civi::settings()->get('zoom_client_secret') ?? FALSE;
+
+  if(!($accountID && $clientKey && $clientSecret)) {
+    $message = new CRM_Utils_Check_Message(
+      $msgID,
+      E::ts(
+        'Ensure that the Account ID, Client Key, and Client Secret are set in the <a href="%1">Zoom Settings</a>',
+        [ '1' =>  CRM_Utils_System::url('civicrm/admin/setting/zoomzoom') ]
+      ),
+      E::ts('Zoom OAuth Credentials are not configured'),
+      Psr\Log\LogLevel::ERROR,
+      'fa-error'
+    );
+
+    $message->addHelp(E::ts(
+      'For more information on getting started with the Zoom extension, see instructions in the <a href="%1">readme file</a>.',
+      [ '1' => 'https://github.com/agileware/au.com.agileware.zoomzoom/blob/master/README.md#getting-started']
+    ));
+
+    $messages[] = $message;
+  }
 }
