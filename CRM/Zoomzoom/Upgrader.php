@@ -26,6 +26,7 @@ class CRM_Zoomzoom_Upgrader extends CRM_Zoomzoom_Upgrader_Base {
    */
   public function postInstall() {
     CRM_Civirules_Utils_Upgrader::insertActionsFromJson(E::path('civirules.json'));
+	CRM_Civirules_Utils_Upgrader::insertConditionsFromJson(E::path('civirulesconditions.json'));
   }
 
   /**
@@ -37,6 +38,7 @@ class CRM_Zoomzoom_Upgrader extends CRM_Zoomzoom_Upgrader_Base {
 
   public function enable() {
     CRM_Civirules_Utils_Upgrader::insertActionsFromJson(E::path('civirules.json'));
+	  CRM_Civirules_Utils_Upgrader::insertConditionsFromJson(E::path('civirulesconditions.json'));
   }
 
   /**
@@ -54,4 +56,11 @@ class CRM_Zoomzoom_Upgrader extends CRM_Zoomzoom_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_10900() {
+	  $this->ctx->log->info('Installing CiviRules Conditions');
+
+	  CRM_Civirules_Utils_Upgrader::insertConditionsFromJson(E::path('civirulesconditions.json'));
+
+	  return TRUE;
+  }
 }

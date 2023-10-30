@@ -1,0 +1,22 @@
+[
+  {
+    "name": "zoom_event_has_zoom_meeting",
+    "label": "Event has Zoom Meeting",
+    "class_name": "CRM_CivirulesConditions_Event_HasZoomMeeting"
+  },
+   {
+    "name": "zoom_event_no_zoom_meeting",
+    "label": "Event does not have Zoom Meeting",
+    "class_name": "CRM_CivirulesConditions_Event_NoZoomMeeting"
+  },
+  {
+    "name": "zoom_participant_has_zoom_registration",
+    "label": "Participant has Registration in Zoom Meeting",
+    "class_name": "CRM_CivirulesConditions_Participant_HasZoomRegistration"
+  },
+  {
+    "name": "zoom_participant_no_zoom_registration",
+    "label": "Participant does not have Registration in Zoom Meeting",
+    "class_name": "CRM_CivirulesConditions_Participant_NoZoomRegistration"
+  }
+]
