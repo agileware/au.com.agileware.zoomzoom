@@ -54,26 +54,25 @@ section below.
      Zoom, it is a good idea to run this job **after** the **Import Zoom Webinars and Meetings**
      job_.
 
-## Import Optional Configuration
+## Import Configuration Defaults
 
 Zoom Zoom is provided with optional configuration sets that can be imported using a third party
-extension,
-[CiviCRM Configuration Loader (configitems)](https://lab.civicrm.org/extensions/configitems). To use
-these configuration sets:
+extension, [CiviCRM Configuration Loader (configitems)](https://lab.civicrm.org/extensions/configitems).
+To use these configuration sets:
 
 1. Install the [configitems](https://lab.civicrm.org/extensions/configitems) extension
 2. Go to "Administer / System Setings / Manage configuration sets" in CiviCRM
 3. Press the **Import Configuration** button:
 4. To install default CiviRules rulesets, use
-   [optional/zoom_zoom_default_rules-v1.zip](optional/zoom_zoom_default_rules-v1.zip)
+   [zoom_zoom_default_rules-v1.zip](optional/zoom_zoom_default_rules-v1.zip)
 5. To install the sample schedule reminder message template, use
-   [optional/zoom_zoom_schedule_reminder-v1.zip](optional/zoom_zoom_schedule_reminder-v1.zip)
+   [zoom_zoom_schedule_reminder-v1.zip](optional/zoom_zoom_schedule_reminder-v1.zip)
 6. You can then create a schedule reminder from "Administer / Communications / Schedule Reminders":
 7. Press the **Add Reminder** button
 8. For the **Used For** field, select *Event Type*
 9. Your **Event Type** field should be *Meeting* and *Webinar* for the default setup, or use the
    event types you have configured for the **Zoom Meeting, Event Type** and **Zoom Webinar, Event
-   Type** at the "Administer / Zoom Settings"
+   Type** in the extension configuration at "Administer / Zoom Settings"
 10. For **Participant Status**, select *Registered*
 11. Fill out the rest of the basic fields as required
 12. Under **Email**: **Use Template**, select *Zoom Event Reminder*
