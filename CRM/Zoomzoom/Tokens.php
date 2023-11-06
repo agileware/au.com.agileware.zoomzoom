@@ -1,6 +1,7 @@
 <?php
 
 use Civi\Api4\Event;
+use Civi\Api4\Participant;
 use Civi\Token\Event\TokenRegisterEvent;
 use Civi\Token\Event\TokenValueEvent;
 use Civi\Token\TokenRow;
@@ -8,6 +9,18 @@ use CRM_Zoomzoom_ExtensionUtil as E;
 
 class CRM_Zoomzoom_Tokens {
 	const TOKEN = 'zoom';
+
+	/**
+	 * @param \Civi\Token\Event\TokenRegisterEvent $entity
+	 * @param string $field Machine name for the token
+	 * @param string $label the translated token label
+	 *
+	 * @return string
+	 */
+	protected static function registerCtx(TokenRegisterEvent $entity, string $field, string $label){
+		$entity->register($field, $label . ' :: ' . E::ts('Zoom (Portable)') );
+	}
+
 	public static function register(TokenRegisterEvent $e) {
 		$context = $e->getTokenProcessor()->context;
 		if(!is_array($context['schema'] ?? NULL))
@@ -16,15 +29,15 @@ class CRM_Zoomzoom_Tokens {
 		// Register Zoom tokens for event
 		if (in_array('eventId', $context['schema'])) {
 			$entity = $e->entity(self::TOKEN);
-			$entity->register('zoom_id', E::ts('Zoom ID'));
-			$entity->register('join_url', E::ts('Zoom Join URL'));
-			$entity->register('global_dial_in_numbers', E::ts('Zoom Dial-in Numbers'));
+			self::registerCtx($entity, 'zoom_id', E::ts('Zoom ID'));
+			self::registerCtx($entity, 'join_url', E::ts('Zoom Join URL'));
+			self::registerCtx($entity, 'global_dial_in_numbers', E::ts('Zoom Dial-in Numbers'));
 		}
 
 		// Register Zoom tokens for participant
 		if (in_array('participantId', $context['schema'])) {
 			$entity = $e->entity( self::TOKEN );
-			$entity->register('registrant_id', E::ts('Zoom Registrant ID'));
+			self::registerCtx($entity, 'registrant_id', E::ts('Zoom Registrant ID'));
 		}
 	}
 
@@ -35,9 +48,12 @@ class CRM_Zoomzoom_Tokens {
 	}
 
 	protected static function evaluateRow(TokenRow $row) {
+		if (empty($row->context['eventId']) && empty($row->context['participantId'])) {
+			return;
+		}
+		$row->format( 'text/html' );
 		try {
-			if ($row->context['eventId']) {
-				$row->format( 'text/html' );
+			if (!empty($row->context['eventId'])) {
 				$event = Event::get( FALSE )
 				              ->addWhere('id', '=', $row->context['eventId'])
 				              ->addSelect('zoom.zoom_id', 'zoom.join_url', 'zoom.global_dial_in_numbers')
@@ -47,8 +63,8 @@ class CRM_Zoomzoom_Tokens {
 				$row->tokens(self::TOKEN, 'join_url', $event['zoom.zoom_url']);
 				$row->tokens(self::TOKEN, 'global_dial_in_numbers', $event['zoom.global_dial_in_numbers']);
 			}
-			if ($row->context['participantId']) {
-				$participant = \Civi\Api4\Participant::get(FALSE)
+			if (!empty($row->context['participantId'])) {
+				$participant = Participant::get(FALSE)
 					->addWhere('id', '=', $row->context['participantId'])
 					->addSelect('zoom_registrant.registrant_id', 'zoom_registrant.join_url')
 					->execute()
