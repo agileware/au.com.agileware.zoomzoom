@@ -59,9 +59,9 @@ class CRM_Zoomzoom_Tokens {
 				              ->addSelect('zoom.zoom_id', 'zoom.join_url', 'zoom.global_dial_in_numbers')
 				              ->execute()
 				              ->first();
-				$row->tokens(self::TOKEN, 'zoom_id', $event['zoom.zoom_id']);
-				$row->tokens(self::TOKEN, 'join_url', $event['zoom.zoom_url']);
-				$row->tokens(self::TOKEN, 'global_dial_in_numbers', $event['zoom.global_dial_in_numbers']);
+				$row->tokens(self::TOKEN, 'zoom_id', $event['zoom.zoom_id'] ?? '');
+				$row->tokens(self::TOKEN, 'join_url', $event['zoom.join_url'] ?? '' );
+				$row->tokens(self::TOKEN, 'global_dial_in_numbers', $event['zoom.global_dial_in_numbers'] ?? '');
 			}
 			if (!empty($row->context['participantId'])) {
 				$participant = Participant::get(FALSE)
@@ -69,8 +69,8 @@ class CRM_Zoomzoom_Tokens {
 					->addSelect('zoom_registrant.registrant_id', 'zoom_registrant.join_url')
 					->execute()
 					->first();
-				$row->tokens(self::TOKEN, 'registrant_id', $participant['zoom_registrant.registrant_id']);
-				$row->tokens(self::TOKEN, 'join_url', $participant['zoom_registrant.join_url']);
+				$row->tokens(self::TOKEN, 'registrant_id', $participant['zoom_registrant.registrant_id'] ?? '');
+				$row->tokens(self::TOKEN, 'join_url', $participant['zoom_registrant.join_url'] ?? '');
 			}
 		}
 		catch(CRM_Core_Exception $e) {
