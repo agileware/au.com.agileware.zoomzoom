@@ -45,6 +45,8 @@ class CRM_Zoomzoom_Zoom {
     }
 
     $zoom = self::getZoomObject();
+
+    // Scopes: user:read:list_users:admin
     $users = $zoom->doRequest('GET', '/users', [
       'status' => 'active',
       'role_id' => 0,
@@ -86,6 +88,7 @@ class CRM_Zoomzoom_Zoom {
 
     if (!empty($user)) {
       do {
+        // Scopes: meeting:read:meeting:admin, webinar:read:webinar:admin
         $zooms_list = $zoom_api->doRequest('GET', '/users/{userId}/' . $api, $params, ['userId' => $user['id']]);
 
         // Set the next results page token is available otherwise, NULL to exit
@@ -129,6 +132,7 @@ class CRM_Zoomzoom_Zoom {
     $json = json_encode($params, JSON_NUMERIC_CHECK);
 
     if (!empty($user)) {
+      // Scopes: meeting:write:meeting, meeting:write:meeting:admin, webinar:write:webinar, webinar:write:webinar:admin
       $response = $zoom_api->doRequest('POST', '/users/{userId}/' . $api, [],
         ['userId' => $user['id']], $json);
 
@@ -191,12 +195,14 @@ class CRM_Zoomzoom_Zoom {
         * See API https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/pastwebinars
         * Developer discussion, https://devforum.zoom.us/t/unable-to-retrieve-a-webinar-s-absentees-past-webinars-webinaruuid-absentees/14381/19
          */
+        // Scopes: webinar:read:list_past_instances:admin
         $zoom_webinar = $zoom_api->doRequest('GET', '/past_webinars/' . $zoom_id . '/instances', $params, ['userId' => $user['id']]);
 
         // Get the UUID for the specific Zoom webinar
         if (!empty($zoom_webinar['webinars'][0]['uuid'])) {
           $zoom_webinaruuid = urlencode($zoom_webinar['webinars'][0]['uuid']);
 
+          // Scopes: webinar:read:list_absentees:admin
           $zoom_absentees = $zoom_api->doRequest('GET', '/past_webinars/' . $zoom_webinaruuid . '/absentees', $params, ['userId' => $user['id']]);
 
           // Set the next results page token is available otherwise, NULL to exit
@@ -242,6 +248,7 @@ class CRM_Zoomzoom_Zoom {
 
     if (!empty($user)) {
       do {
+        // Scopes: meeting:read:list_past_participants:admin, webinar:read:list_past_participants:admin
         $zoom_participants = $zoom_api->doRequest('GET', '/past_' . $api . '/' . $zoom_id . '/participants', $params, ['userId' => $user['id']]);
 
         // Set the next results page token is available otherwise, NULL to exit
@@ -281,6 +288,7 @@ class CRM_Zoomzoom_Zoom {
     if (!empty($user)) {
 
       do {
+        // Scopes: webinar:read:list_registrants:admin, ?webinar:read:list_registrants:admin
         $zoom_participants = $zoom_api->doRequest('GET', '/' . $api . '/' . $zoom_id . '/registrants', $params, ['userId' => $user['id']]);
 
         // Set the next results page token is available otherwise, NULL to exit
@@ -458,6 +466,7 @@ class CRM_Zoomzoom_Zoom {
     $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($civicrm_zoom_id);
     $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($civicrm_zoom_id);
 
+    // Scopes: webinar:write:registrant:admin, ?meeting:write:registrant:admin
     $response = $zoom_api->doRequest('POST', '/' . $api . '/{zoomId}/registrants', [],
       ['zoomId' => $zoom_id], $json);
 
@@ -496,6 +505,7 @@ class CRM_Zoomzoom_Zoom {
     $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($civicrm_zoom_id);
     $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($civicrm_zoom_id);
 
+    // Scopes: webinar:delete:registrant:admin, ?meeting:delete:registrant:admin
     $zoom_api->doRequest('DELETE', '/' . $api . '/{zoomId}/registrants/{registrantId}', [],
       ['zoomId' => $zoom_id, 'registrantId' => $registrant_id]);
 
@@ -522,6 +532,7 @@ class CRM_Zoomzoom_Zoom {
     $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($civicrm_zoom_id);
     $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($civicrm_zoom_id);
 
+    // Scopes: meeting:update:meeting:admin, webinar:update:webinar:admin
     $zoom_api->doRequest('PATCH', '/' . $api . '/{zoomId}', [],
       ['zoomId' => $zoom_id], $json);
 
@@ -560,6 +571,7 @@ class CRM_Zoomzoom_Zoom {
     ];
     $json = json_encode($params);
 
+    // Scopes: webinar:delete:webinar:admin, ?meeting:delete:meeting:admin
     $zoom_api->doRequest('DELETE', '/' . $api . '/{zoomId}', [],
       ['zoomId' => $zoom_id], $json);
 
