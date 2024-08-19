@@ -18,7 +18,7 @@ class CRM_Zoomzoom_Tokens {
 	 * @return string
 	 */
 	protected static function registerCtx(TokenRegisterEvent $entity, string $field, string $label){
-		$entity->register($field, $label . ' :: ' . E::ts('Zoom') );
+		$entity->register($field, $label . ' :: ' . E::ts('Zoom (Portable)') );
 	}
 
 	public static function register(TokenRegisterEvent $e) {
