@@ -13,6 +13,12 @@ class CRM_CivirulesActions_Event_ZoomCreateMeetingFromEvent extends CRM_Civirule
 
   public function processAction(CRM_Civirules_TriggerData_TriggerData $triggerData) {
     $event = $triggerData->getEntityData('Event');
+
+    // Skip if this is a template
+    if ( $event['is_template'] ) {
+      return;
+    }
+    
     $actionParams = $this->getActionParameters();
 
     $params['topic'] = $event['title'];
