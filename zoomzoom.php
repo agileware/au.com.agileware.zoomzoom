@@ -200,9 +200,9 @@ function zoomzoom_civicrm_navigationMenu(&$menu) {
 
 /**
  * Implements hook_civicrm_check().
- * 
+ *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_check
- * 
+ *
  * @param $messages array
  * @param $statusNames array
  * @param $includeDisabled bool
@@ -257,4 +257,16 @@ function zoomzoom_civicrm_container($container) {
 	$dispatcher = $container->findDefinition('dispatcher');
 	$dispatcher->addMethodCall('addListener', ['civi.token.eval', ['CRM_Zoomzoom_Tokens', 'evaluate']]);
 	$dispatcher->addMethodCall('addListener', ['civi.token.list', ['CRM_Zoomzoom_Tokens', 'register']]);
+}
+
+/**
+ * Implements hook_civicrm_pageRun()
+ *
+ * @param $page
+ */
+function zoomzoom_civicrm_buildForm($formName, &$form) {
+  if ( $form instanceof CRM_Event_Form_ManageEvent_EventInfo ) {
+    // Add the CSS file to the Event admin page
+    CRM_Core_Resources::singleton()->addStyleFile('au.com.agileware.zoomzoom', 'css/zoomzoom.css', -50, 'html-header');
+  }
 }
