@@ -3,6 +3,13 @@
 class CRM_CivirulesActions_Event_ZoomCreateMeetingFromEvent extends CRM_Civirules_Action {
 
   /**
+   * Flag to indicate whether this rule action is already being run.
+   * Prevents update and create API calls from triggering "Event is changed" multiple times.
+   * Checked by CRM_CivirulesConditions_Event_HasZoomMeeting.
+   */
+  public static $lock = false;
+
+  /**
    * Method processAction to execute the action
    *
    * @param CRM_Civirules_TriggerData_TriggerData $triggerData
@@ -18,7 +25,10 @@ class CRM_CivirulesActions_Event_ZoomCreateMeetingFromEvent extends CRM_Civirule
     if ( $event['is_template'] ) {
       return;
     }
-    
+
+    // Lock this action from firing again if the CiviRule is already running. Prevents duplicate Zooms.
+    self::$lock = true;
+
     $actionParams = $this->getActionParameters();
 
     $params['topic'] = $event['title'];
@@ -99,6 +109,8 @@ class CRM_CivirulesActions_Event_ZoomCreateMeetingFromEvent extends CRM_Civirule
       ]);
 
     }
+
+    self::$lock = false;
   }
 
   /**
