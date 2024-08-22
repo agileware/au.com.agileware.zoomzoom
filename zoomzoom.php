@@ -260,13 +260,10 @@ function zoomzoom_civicrm_container($container) {
 }
 
 /**
- * Implements hook_civicrm_pageRun()
+ * Implements hook_civicrm_buildForm()
  *
  * @param $page
  */
 function zoomzoom_civicrm_buildForm($formName, &$form) {
-  if ( $form instanceof CRM_Event_Form_ManageEvent_EventInfo ) {
-    // Add the CSS file to the Event admin page
-    CRM_Core_Resources::singleton()->addStyleFile('au.com.agileware.zoomzoom', 'css/zoomzoom.css', -50, 'html-header');
-  }
+  CRM_Core_Resources::singleton()->addStyleFile('au.com.agileware.zoomzoom', 'css/zoomzoom.css', -50, 'html-header');
 }
