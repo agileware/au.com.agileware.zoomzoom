@@ -54,6 +54,18 @@ section below.
      Zoom, it is a good idea to run this job **after** the **Import Zoom Webinars and Meetings**
      job_.
 
+## Configuring Rules
+
+You use CiviRules to define the logic of when a Zoom should be created, updated, or deleted. Or if a Zoom Participant should be added or deleted.
+This allows for customisation of how you wish to mark Events for Zoom integration. For example, you can target by Event Type, or you could use a custom "Does this Event require Zoom?" field.
+
+Here is an example configuration using Event Types to create, update, and delete Zoom entities.
+
+![Zoom Event Rules configuration example](images/rules-example.png)
+
+Default Rules are provided for your reference in the `/optional` directory.
+
+
 ## Import Configuration Defaults
 
 Zoom Zoom is provided with optional configuration sets that can be imported using a third party
@@ -141,4 +153,23 @@ Support your Australian [CiviCRM](https://civicrm.org) developers,
 
 ## Tests
 
-See the list of [tests performed](tests.md) to verify default functionality.
+The following tests were performed for verification.
+
+*Disclaimer*: This is not an exhaustive list of test cases and scenarios. Tests will be performed as required, and recorded here.
+
+### Test Environment
+
+* CiviCRM version : 5.75.1
+* CiviRules version : 3.11
+
+### Test Cases
+
+| Result | Test | Expect |
+| --- | --- | --- |
+| **PASS**  | Event created of Zoom enabled type | Event is created. A Zoom entity is NOT generated on Event creation. Saving the Event Info form generates a single Zoom entity and saves its details to the Event. |
+| **PASS**  | Event created from Event Template of Zoom enabled type | Event is created. A single Zoom Entity is generated, and details saved to the Event. |
+| **PASS**  | Event created of NOT Zoom enabled type | Event is created. A Zoom entity is NOT generated. Saving the Event Info form again does NOT generate a Zoom entity. |
+| **PASS**  | Event of NOT Zoom enabled type is changed to Zoom enabled type | Event is updated to the Zoom enabled type. A single Zoom Entity is generated, and details saved to the Event. |
+| **PASS**  | Event created from Event Template of NOT Zoom enabled type | Event is created. A Zoom entity is NOT generated. Saving the Event Info form again does NOT generate a Zoom entity. |
+| **PASS**  | Event of Zoom enabled type is changed to NOT Zoom enabled type | Event is changed to the new type. The associated Zoom entity is unlinked from the Event and deleted from the Zoom account. |
+| **PASS**  | Event of Zoom enabled type has title, start and end dates changed | Event is updated. The associated Zoom entity is updated with the same details in the Zoom account - Zoom ID persists. |
