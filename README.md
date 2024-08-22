@@ -20,7 +20,7 @@ The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
 JWT Apps are deprecated on Zoom, so to ensure continued function this app has been converted to use
 OAuth Server-to-Server. Existing installations configured to use a JWT App will need to create
-and connect to a new app according to the instructions in the [Getting Started](#getting-started) 
+and connect to a new app according to the instructions in the [Getting Started](#getting-started)
 section below.
 
 ## Getting Started
@@ -64,7 +64,7 @@ To use these configuration sets:
 2. Go to "Administer / System Setings / Manage configuration sets" in CiviCRM
 3. Press the **Import Configuration** button:
 4. To install default CiviRules rulesets, use
-   [zoom_zoom_default_rules-v1.zip](optional/zoom_zoom_default_rules-v1.zip)
+   [zoom_zoom_default_rules-v2.zip](optional/zoom_zoom_default_rules-v2.zip)
 5. To install the sample schedule reminder message template, use
    [zoom_zoom_schedule_reminder-v1.zip](optional/zoom_zoom_schedule_reminder-v1.zip)
 6. You can then create a schedule reminder from "Administer / Communications / Schedule Reminders":
@@ -138,3 +138,7 @@ Support your Australian [CiviCRM](https://civicrm.org) developers,
 [contact Agileware](https://agileware.com.au/contact) today!
 
 ![Agileware](logo/agileware-logo.png)
+
+## Tests
+
+See the list of [tests performed](tests.md) to verify default functionality.
