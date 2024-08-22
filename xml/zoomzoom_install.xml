@@ -8,7 +8,7 @@
             <extends>Event</extends>
             <style>Inline</style>
             <collapse_display>1</collapse_display>
-            <help_pre>The following options are automatically set when a Zoom is associated with this CiviCRM Event.</help_pre>
+            <help_pre>The following options are automatically set when a Zoom entity is associated with this CiviCRM Event. Save this form to trigger generation of a new Zoom entity and have it linked to this Event.</help_pre>
             <help_post></help_post>
             <weight>16</weight>
             <is_active>1</is_active>
