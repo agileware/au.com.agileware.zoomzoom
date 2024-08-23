@@ -19,16 +19,16 @@ class CRM_CivirulesConditions_Event_HasZoomMeeting extends CRM_Civirules_Conditi
       return false;
     }
 
-	$event_id = $triggerData->getEntityData('Event')['id'];
+    $event_id = $triggerData->getEntityData('Event')['id'];
 
-	$count = Event::get(FALSE)
-				->selectRowCount()
-				->addWhere('id', '=', $event_id )
-				->addWhere('zoom.zoom_id', 'IS NOT EMPTY')
-				->execute()
-				->count();
+    $count = Event::get(FALSE)
+          ->selectRowCount()
+          ->addWhere('id', '=', $event_id )
+          ->addWhere('zoom.zoom_id', 'IS NOT EMPTY')
+          ->execute()
+          ->count();
 
-	return ($count > 0);
+    return ($count > 0);
 	}
 
 	/**

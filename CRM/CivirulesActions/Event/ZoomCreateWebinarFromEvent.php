@@ -26,9 +26,19 @@ class CRM_CivirulesActions_Event_ZoomCreateWebinarFromEvent extends CRM_Civirule
       return;
     }
 
+    // Safety check: Skip if Zoom ID already exists
+    $event_details = \Civi\Api4\Event::get()
+        ->addWhere('id', '=', $event['id'])
+        ->addSelect('zoom.zoom_id')
+        ->execute();
+
+    if ( !empty($event_details[0]['zoom.zoom_id']) ) {
+      return;
+    }
+
     // Lock this action from firing again if the CiviRule is already running. Prevents duplicate Zooms.
     self::$lock = true;
-    
+
     $actionParams = $this->getActionParameters();
 
     $params['topic'] = $event['title'];
