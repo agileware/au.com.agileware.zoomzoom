@@ -18,7 +18,7 @@
   <version>1.10.5</version>
   <develStage>stable</develStage>
   <compatibility>
-    <ver>5.19</ver>
+    <ver>5.75</ver>
   </compatibility>
   <comments>Credit to Lighthouse Consulting and Design, Inc for developing https://github.com/lcdservices/biz.lcdservices.civizoom which was used as the basis for this new extension. Credit to Veda Consulting for developing https://github.com/veda-consulting-company/ncn-civi-zoom which was used as reference for the CiviRules implementation.</comments>
   <requires>
