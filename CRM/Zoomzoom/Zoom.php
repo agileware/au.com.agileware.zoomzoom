@@ -88,7 +88,7 @@ class CRM_Zoomzoom_Zoom {
 
     if (!empty($user)) {
       do {
-        // Scopes: meeting:read:meeting:admin, webinar:read:webinar:admin
+        // Scopes: meeting:read:meeting:admin, webinar:read:webinar:admin, meeting:read:list_meeting, meeting:read:list_meetings:admin, webinar:read:list_webinars, webinar:read:list_webinars:admin
         $zooms_list = $zoom_api->doRequest('GET', '/users/{userId}/' . $api, $params, ['userId' => $user['id']]);
 
         // Set the next results page token is available otherwise, NULL to exit

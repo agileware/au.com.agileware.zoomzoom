@@ -29,10 +29,10 @@ section below.
    Server-to-Server App in the [Zoom Marketplace](https://marketplace.zoom.us/develop/create).
    1. Fill in the App Details
    2. Move through to the Scopes tab and ensure that the App has the appropriate scope permissions:
-	  * **View all user meetings** /meeting:read:admin, meeting:read:past_meeting:admin, meeting:read:meeting:admin, meeting:read:list_past_participants:admin, meeting:read:list_past_instances:admin, meeting:read:registrant:admin, meeting:read:list_registrants:admin, meeting:read:participant:admin
+	  * **View all user meetings** /meeting:read:admin, meeting:read:past_meeting:admin, meeting:read:meeting:admin, meeting:read:list_past_participants:admin, meeting:read:list_past_instances:admin, meeting:read:registrant:admin, meeting:read:list_registrants:admin, meeting:read:participant:admin, meeting:read:list_meeting, meeting:read:list_meetings:admin
 	  * **View and manage all user meetings** /meeting:write:admin, meeting:write:registrant:admin, meeting:update:meeting:admin, meeting:delete:meeting:admin, meeting:write:meeting:admin, meeting:delete:registrant:admin
 	  * **View all user information** /user:read:admin, user:read:list_users:admin, user:read:user:admin
-	  * **View all user Webinars** /webinar:read:admin, webinar:read:list_past_instances:admin, webinar:read:list_absentees:admin, webinar:read:webinar:admin, webinar:read:list_past_participants:admin, webinar:read:participant:admin, webinar:read:registrant:admin, webinar:read:list_registrants:admin
+	  * **View all user Webinars** /webinar:read:admin, webinar:read:list_past_instances:admin, webinar:read:list_absentees:admin, webinar:read:webinar:admin, webinar:read:list_past_participants:admin, webinar:read:participant:admin, webinar:read:registrant:admin, webinar:read:list_registrants:admin, webinar:read:list_webinars, webinar:read:list_webinars:admin
 	  * **View and manage all user Webinars** /webinar:write:admin, webinar:delete:registrant:admin, webinar:update:webinar:admin, webinar:delete:webinar:admin, webinar:write:webinar:admin, webinar:write:registrant:admin
 	  ![Screenshot of appropriate scope configuration](images/zoom-app-scopes.png)
    3. Continue to Activation and Activate your app
