@@ -38,8 +38,8 @@
             <column_name>zoom_id</column_name>
             <serialize>0</serialize>
             <in_selector>0</in_selector>
-            <custom_group_name>zoom</custom_group_name>
             <is_view>1</is_view>
+            <custom_group_name>zoom</custom_group_name>
         </CustomField>
         <CustomField>
             <name>password</name>
@@ -47,7 +47,7 @@
             <data_type>String</data_type>
             <html_type>Text</html_type>
             <is_required>0</is_required>
-            <is_searchable>1</is_searchable>
+            <is_searchable>0</is_searchable>
             <is_search_range>0</is_search_range>
             <weight>2</weight>
             <is_active>1</is_active>
@@ -57,8 +57,8 @@
             <column_name>password</column_name>
             <serialize>0</serialize>
             <in_selector>0</in_selector>
-            <custom_group_name>zoom</custom_group_name>
             <is_view>1</is_view>
+            <custom_group_name>zoom</custom_group_name>
         </CustomField>
         <CustomField>
             <name>start_url</name>
@@ -66,7 +66,7 @@
             <data_type>Memo</data_type>
             <html_type>TextArea</html_type>
             <is_required>0</is_required>
-            <is_searchable>1</is_searchable>
+            <is_searchable>0</is_searchable>
             <is_search_range>0</is_search_range>
             <weight>3</weight>
             <is_active>1</is_active>
@@ -75,8 +75,8 @@
             <column_name>start_url</column_name>
             <serialize>0</serialize>
             <in_selector>0</in_selector>
-            <custom_group_name>zoom</custom_group_name>
             <is_view>1</is_view>
+            <custom_group_name>zoom</custom_group_name>
         </CustomField>
         <CustomField>
             <name>join_url</name>
@@ -84,7 +84,7 @@
             <data_type>Memo</data_type>
             <html_type>TextArea</html_type>
             <is_required>0</is_required>
-            <is_searchable>1</is_searchable>
+            <is_searchable>0</is_searchable>
             <is_search_range>0</is_search_range>
             <weight>4</weight>
             <is_active>1</is_active>
@@ -93,8 +93,8 @@
             <column_name>join_url</column_name>
             <serialize>0</serialize>
             <in_selector>0</in_selector>
-            <custom_group_name>zoom</custom_group_name>
             <is_view>1</is_view>
+            <custom_group_name>zoom</custom_group_name>
         </CustomField>
         <CustomField>
             <name>registration_url</name>
@@ -102,7 +102,7 @@
             <data_type>Memo</data_type>
             <html_type>TextArea</html_type>
             <is_required>0</is_required>
-            <is_searchable>1</is_searchable>
+            <is_searchable>0</is_searchable>
             <is_search_range>0</is_search_range>
             <weight>5</weight>
             <is_active>1</is_active>
@@ -111,8 +111,8 @@
             <column_name>registration_url</column_name>
             <serialize>0</serialize>
             <in_selector>0</in_selector>
-            <custom_group_name>zoom</custom_group_name>
             <is_view>1</is_view>
+            <custom_group_name>zoom</custom_group_name>
         </CustomField>
         <CustomField>
             <name>global_dial_in_numbers</name>
@@ -120,7 +120,7 @@
             <data_type>Memo</data_type>
             <html_type>RichTextEditor</html_type>
             <is_required>0</is_required>
-            <is_searchable>1</is_searchable>
+            <is_searchable>0</is_searchable>
             <is_search_range>0</is_search_range>
             <weight>6</weight>
             <is_active>1</is_active>
@@ -129,8 +129,8 @@
             <column_name>global_dial_in_numbers</column_name>
             <serialize>0</serialize>
             <in_selector>0</in_selector>
-            <custom_group_name>zoom</custom_group_name>
             <is_view>1</is_view>
+            <custom_group_name>zoom</custom_group_name>
         </CustomField>
     </CustomFields>
     <OptionValues>

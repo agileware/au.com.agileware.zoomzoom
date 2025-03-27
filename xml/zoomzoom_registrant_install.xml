@@ -27,7 +27,7 @@
       <data_type>String</data_type>
       <html_type>Text</html_type>
       <is_required>0</is_required>
-      <is_searchable>1</is_searchable>
+      <is_searchable>0</is_searchable>
       <is_search_range>0</is_search_range>
       <weight>1</weight>
       <is_active>1</is_active>
@@ -37,6 +37,7 @@
       <column_name>zoom_id</column_name>
       <serialize>0</serialize>
       <in_selector>0</in_selector>
+      <is_view>1</is_view>
       <custom_group_name>zoom_registrant</custom_group_name>
     </CustomField>
     <CustomField>
@@ -45,7 +46,7 @@
       <data_type>String</data_type>
       <html_type>Text</html_type>
       <is_required>0</is_required>
-      <is_searchable>1</is_searchable>
+      <is_searchable>0</is_searchable>
       <is_search_range>0</is_search_range>
       <weight>1</weight>
       <is_active>1</is_active>
@@ -55,6 +56,7 @@
       <column_name>registrant_id</column_name>
       <serialize>0</serialize>
       <in_selector>0</in_selector>
+      <is_view>1</is_view>
       <custom_group_name>zoom_registrant</custom_group_name>
     </CustomField>
     <CustomField>
@@ -63,7 +65,7 @@
       <data_type>Memo</data_type>
       <html_type>TextArea</html_type>
       <is_required>0</is_required>
-      <is_searchable>1</is_searchable>
+      <is_searchable>0</is_searchable>
       <is_search_range>0</is_search_range>
       <weight>2</weight>
       <is_active>1</is_active>
@@ -72,6 +74,7 @@
       <column_name>join_url</column_name>
       <serialize>0</serialize>
       <in_selector>0</in_selector>
+      <is_view>1</is_view>
       <custom_group_name>zoom_registrant</custom_group_name>
     </CustomField>
   </CustomFields>
