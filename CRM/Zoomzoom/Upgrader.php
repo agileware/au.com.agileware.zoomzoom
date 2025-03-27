@@ -63,4 +63,27 @@ class CRM_Zoomzoom_Upgrader extends CRM_Extension_Upgrader_Base {
 
 	  return TRUE;
   }
+
+  public function upgrade_10910()
+  {
+    $this->ctx->log->info('Changing Event and Registrant, Zoom fields to read-only and non-searchable');
+
+    try {
+      \Civi\Api4\CustomField::update(FALSE)
+        ->addValue('is_searchable', FALSE)
+        ->addValue('is_view', TRUE)
+        ->addWhere('custom_group_id:name', '=', 'zoom')
+        ->execute();
+
+      \Civi\Api4\CustomField::update(FALSE)
+        ->addValue('is_searchable', FALSE)
+        ->addValue('is_view', TRUE)
+        ->addWhere('custom_group_id:name', '=', 'zoom_registrant')
+        ->execute();
+    } catch (Exception $e) {
+      // Do nothing - not critical
+    }
+    return TRUE;
+  }
+  
 }
