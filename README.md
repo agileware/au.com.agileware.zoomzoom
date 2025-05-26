@@ -57,53 +57,54 @@ section below.
 
 ## Configuring Rules
 
-You use CiviRules to define the logic of when a Zoom should be created, updated, or deleted. Or if a Zoom 
+You use CiviRules to define the logic of when a Zoom should be created, updated, or deleted. Or if a Zoom
 Participant should be added or deleted.
-This allows for customisation of how you wish to mark Events for Zoom integration. For example, you can 
-target by Event Type, or you could use a custom "Does this Event require Zoom?" field. You may also wish to 
+This allows for customisation of how you wish to mark Events for Zoom integration. For example, you can
+target by Event Type, or you could use a custom "Does this Event require Zoom?" field. You may also wish to
 add additional actions before or after Zoom action.
 
 Here is an example configuration using Event Types to create, update, and delete Zoom entities.
 
 ![Zoom Event Rules configuration example](images/rules-example.png)
 
-Default Rules are provided for your reference in the `/optional` directory. You can also refer to the *Tests* 
+Default Rules are provided for your reference in the `/optional` directory. You can also refer to the *Tests*
 section as a guide for configuring your rules.
 
 
-## Import Configuration Defaults
+## Configuration Defaults
 
-Zoom Zoom is provided with optional configuration sets that can be imported using a third party
-extension, [CiviCRM Configuration Loader (configitems)](https://lab.civicrm.org/extensions/configitems).
-To use these configuration sets:
+Zoom Zoom is provided with optional default configuration sets.
 
-1. Install the [configitems](https://lab.civicrm.org/extensions/configitems) extension
-2. Go to "Administer / System Setings / Manage configuration sets" in CiviCRM
-3. Press the **Import Configuration** button:
-4. To install default CiviRules rulesets, use
+- Default CiviRules rulesets
    [zoom_zoom_default_rules-v2.zip](optional/zoom_zoom_default_rules-v2.zip)
-5. To install the sample schedule reminder message template, use
+- Sample schedule reminder message template
    [zoom_zoom_schedule_reminder-v1.zip](optional/zoom_zoom_schedule_reminder-v1.zip)
-6. You can then create a schedule reminder from "Administer / Communications / Schedule Reminders":
-7. Press the **Add Reminder** button
-8. For the **Used For** field, select *Event Type*
-9. Your **Event Type** field should be *Meeting* and *Webinar* for the default setup, or use the
-   event types you have configured for the **Zoom Meeting, Event Type** and **Zoom Webinar, Event
-   Type** in the extension configuration at "Administer / Zoom Settings"
-10. For **Participant Status**, select *Registered*
-11. Fill out the rest of the basic fields as required
-12. Under **Email**: **Use Template**, select *Zoom Event Reminder*
-13. The HTML Format field will the have the imported template inserted into it, ready to be
+   1. You can then create a schedule reminder from "Administer / Communications / Schedule Reminders"
+   1. Press the **Add Reminder** button
+   1. For the **Used For** field, select *Event Type*
+   1. Your **Event Type** field should be *Meeting* and *Webinar* for the default setup, or use the
+      event types you have configured for the **Zoom Meeting, Event Type** and **Zoom Webinar, Event
+      Type** in the extension configuration at "Administer / Zoom Settings"
+   1. For **Participant Status**, select *Registered*
+   1. Fill out the rest of the basic fields as required
+   1. Under **Email**: **Use Template**, select *Zoom Event Reminder*
+   1. The HTML Format field will the have the imported template inserted into it, ready to be
    customised.
 
 ![Schedule Reminder example](images/schedule-reminder-example.png)
+
+### Deprecated - Third party extension CiviCRM Configuration Loader (configitems) no longer supported
+
+The third party extension, [CiviCRM Configuration Loader (configitems)](https://lab.civicrm.org/extensions/configitems) is no longer supported. [See active bug reports](https://lab.civicrm.org/extensions/configitems/-/issues).
+
+You can refer to the exported rulesets' code to help you build your rules.
 
 
 ## Tests
 
 The following tests were performed for verification.
 
-*Disclaimer*: This is not an exhaustive list of test cases and scenarios. Tests will be performed as 
+*Disclaimer*: This is not an exhaustive list of test cases and scenarios. Tests will be performed as
 required, and recorded here.
 
 ### Test Environment
