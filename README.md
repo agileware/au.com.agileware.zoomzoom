@@ -55,6 +55,7 @@ section below.
      job_.
 
 
+
 ## Configuring Rules
 
 You use CiviRules to define the logic of when a Zoom should be created, updated, or deleted. Or if a Zoom
@@ -69,6 +70,24 @@ Here is an example configuration using Event Types to create, update, and delete
 
 Default Rules are provided for your reference in the `/optional` directory. You can also refer to the *Tests*
 section as a guide for configuring your rules.
+
+### Scheduling for another user account
+
+This extension by default creates Zoom meetings/webinars for the Owner account.
+
+If the user account you wish to host the Zoom meetings/webinars is *not* the Owner, you can set the CiviRules actions to schedule the meeting for another account. To do so, the target account must have Schedule Privileges enabled for the Owner account.
+
+1. Login as an Owner/Admin user account.
+1. In the Admin navigation menu, click on [Settings](https://zoom.us/profile/setting).
+1. Under Schedule Privilege, next to "Assign scheduling privilege toAssign scheduling privilege to", click Edit or Add. **Note** If you don't see this option, you may not have permission to set Schedule Privileges. Contact the Zoom Account Owner to grant you permission, or to do the next steps in Zoom for you.
+1. Under Users, enter the email address of the Owner account.
+1. (Optional) Set addtional options (see [Zoom documentation](https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0061749))
+1. Save your settings.
+1. In CiviCRM, edit your Zoom CiviRule.
+1. Edit the "Create Zoom Meeting From Event" or "Create Zoom Webinar From Event" action.
+1. Add your Admin user account email in "If you would like to schedule this meeting for someone else in your account, provide the Zoom user id or email address of the user here". **NOTE** this is the user account used to create the OAuth Server-to-Server app.
+1. Save your changes and test.
+1. The Zoom Meeting/Webinar should be scheduled with the admin email account as host.
 
 
 ## Configuration Defaults
