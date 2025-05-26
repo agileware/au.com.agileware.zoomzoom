@@ -170,7 +170,8 @@ class CRM_CivirulesActions_Event_ZoomCreateWebinarFromEvent extends CRM_Civirule
    * @access public
    */
   public function getExtraDataInputUrl($ruleActionId) {
-    return CRM_Utils_System::url('civicrm/civirule/form/action/zoom/createwebinarfromevent', 'rule_action_id=' . $ruleActionId);
+    // Refs CRM_Civirules_Action::getFormattedExtraDataInputUrl()
+    return CRM_Utils_System::url('civicrm/civirule/form/action/zoom/createwebinarfromevent', 'rule_action_id=' . $ruleActionId, FALSE, NULL, FALSE, FALSE, TRUE);
   }
 
 }
