@@ -175,6 +175,8 @@ function civicrm_api3_zoomzoom_importattendees($params) {
         $api = CRM_Zoomzoom_Zoom::getZoomAPIFromCiviCRMZoomId($event['zoom.zoom_id']);
         $zoom_id = CRM_Zoomzoom_Zoom::getZoomIDFromCiviCRMZoomId($event['zoom.zoom_id']);
 
+        $update_batch = [];
+
         // If the event is scheduled for a future date then get registrants
         if (strtotime($event['start_date']) >= strtotime('Now')) {
 
@@ -194,7 +196,7 @@ function civicrm_api3_zoomzoom_importattendees($params) {
               $registrant_details['status_id'] = Civi::settings()
                 ->get('zoom_import_status_registration');
 
-              CRM_Zoomzoom_Zoom::updateCiviCRMParticipant($registrant_details);
+              $update_batch[] = $registrant_details;
             }
           }
         }
@@ -214,7 +216,7 @@ function civicrm_api3_zoomzoom_importattendees($params) {
               $participant_details['status_id'] = Civi::settings()
                 ->get('zoom_import_status_participant');
 
-              CRM_Zoomzoom_Zoom::updateCiviCRMParticipant($participant_details);
+              $update_batch[] = $participant_details;
             }
           }
           // Get the absentees for webinars
@@ -230,11 +232,13 @@ function civicrm_api3_zoomzoom_importattendees($params) {
                 $absentee_details['status_id'] = Civi::settings()
                   ->get('zoom_import_status_absentee');
 
-                CRM_Zoomzoom_Zoom::updateCiviCRMParticipant($absentee_details);
+                $update_batch[] = $absentee_details;
               }
             }
           }
         }
+
+        CRM_Zoomzoom_Zoom::bulkUpdateCiviCRMParticipants($update_batch, $event['id']);
       }
     } catch (Exception $e) {
       $errorMessage = $e->getMessage();

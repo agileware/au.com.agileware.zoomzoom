@@ -305,6 +305,70 @@ class CRM_Zoomzoom_Zoom {
     return $registrants;
   }
 
+  static function bulkUpdateCiviCRMParticipants($update_batch, $eventID) {
+    if (empty($update_batch)) {
+      return;
+    }
+
+    $currentParticipants = \Civi\Api4\Participant::get(TRUE)
+      ->addSelect(
+        'contact_id.first_name',
+        'contact_id.last_name',
+        'GROUP_CONCAT(LOWER(email.email))',
+        'registered_by_id.zoom_registrant.registrant_id',
+        'zoom_registrant.join_url',
+        'status_id',
+        'register_date',
+        'contact_id'
+      )
+      ->addJoin('Email AS email', 'LEFT', ['email.contact_id', '=', 'contact_id'])
+      ->addGroupBy('id')
+      ->addWhere('event_id', '=', $eventID)
+      ->execute()
+      ->getArrayCopy();
+
+      foreach ($update_batch as $to_update) {
+        if (empty($to_update['email'])) {
+          continue;
+        }
+
+        if (self::participantNeedsUpdate($to_update, $currentParticipants)) {
+          self::updateCiviCRMParticipant($to_update);
+        }
+      }
+  }
+
+  static private function participantNeedsUpdate($to_update, $currentParticipants) {
+    $updateEmail = strtolower(trim($to_update['email']));
+
+    $emails = array_column($currentParticipants, 'GROUP_CONCAT:email.email');
+    $emails_flat = array();
+    array_walk_recursive($emails, function($a) use (&$emails_flat) { $emails_flat[] = $a; });
+
+    if (!in_array($updateEmail, $emails_flat)) {
+      // If the email does not exist in the current participants, then it needs to be updated (created)
+      return TRUE;
+    }
+
+    foreach ($currentParticipants as $current) {
+      $currentEmails = $current['GROUP_CONCAT:email.email'];
+
+      if (in_array($updateEmail, $currentEmails)) {
+        // Check join URL
+        if ($current['zoom_registrant.join_url'] != $to_update['zoom_join_url']) {
+          return TRUE;
+        }
+
+        // Check status ID
+        if ($current['status_id'] != $to_update['status_id']) {
+          return TRUE;
+        }
+      }
+    }
+
+    return FALSE;
+  }
+
   /**
    * Updates a CiviCRM Participant based on the registration details from Zoom.
    * Participant is created if does not exist.
@@ -331,8 +395,8 @@ class CRM_Zoomzoom_Zoom {
         // Create the contact now
         $new_contact = \Civi\Api4\Contact::create()
           ->addValue('contact_type', 'Individual')
-          ->addValue('first_name', $registration_details['first_name'])
-          ->addValue('last_name', $registration_details['last_name'])
+          ->addValue('first_name', $registration_details['first_name'] ?? '')
+          ->addValue('last_name', $registration_details['last_name'] ?? '')
           ->addChain('add_email', \Civi\Api4\Email::create()
             ->addValue('contact_id', '$id')
             ->addValue('email', $email)
@@ -360,8 +424,8 @@ class CRM_Zoomzoom_Zoom {
         $results = \Civi\Api4\Participant::update()
           ->addWhere('id', '=', $existing_participant[0]['id'])
           ->addValue('status_id', $registration_details['status_id'])
-          ->addValue('zoom_registrant.registrant_id', $registration_details['zoom_id'])
-          ->addValue('zoom_registrant.join_url', $registration_details['zoom_join_url'])
+          ->addValue('zoom_registrant.registrant_id', $registration_details['zoom_id'] ?? '')
+          ->addValue('zoom_registrant.join_url', $registration_details['zoom_join_url'] ?? '')
           ->execute();
 
         return TRUE;
