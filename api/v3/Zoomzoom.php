@@ -119,7 +119,7 @@ function civicrm_api3_zoomzoom_importzooms($params) {
     }
     return civicrm_api3_create_success(TRUE, $params, 'Civizoom', 'importzooms');
 
-  } catch (API_Exception $e) {
+  } catch (CRM_Core_Exception $e) {
     $errorMessage = $e->getMessage();
     CRM_Core_Error::debug_var('Zoomzoom::importzooms', $errorMessage);
     CRM_Core_Error::debug_var('Zoomzoom::importzooms', $params);
@@ -243,7 +243,7 @@ function civicrm_api3_zoomzoom_importattendees($params) {
     }
     return civicrm_api3_create_success(TRUE, $params, 'Zoomzoom', 'importattendees');
 
-  } catch (API_Exception $e) {
+  } catch (CRM_Core_Exception $e) {
     $errorMessage = $e->getMessage();
     CRM_Core_Error::debug_var('Zoomzoom::importattendees', $errorMessage);
     CRM_Core_Error::debug_var('Zoomzoom::importattendees', $params);
