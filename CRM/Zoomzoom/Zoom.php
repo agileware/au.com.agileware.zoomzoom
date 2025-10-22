@@ -382,7 +382,7 @@ class CRM_Zoomzoom_Zoom {
 
         return TRUE;
       }
-    } catch (API_Exception $e) {
+    } catch (CRM_Core_Exception $e) {
       $errorMessage = $e->getMessage();
       CRM_Core_Error::debug_var('Zoomzoom::updateCiviCRMParticipant', $errorMessage);
       CRM_Core_Error::debug_var('Zoomzoom::updateCiviCRMParticipant', $registration_details);
@@ -406,7 +406,7 @@ class CRM_Zoomzoom_Zoom {
       ]);
       return $result ?? NULL;
 
-    } catch (CiviCRM_API3_Exception $e) {
+    } catch (CRM_Core_Exception $e) {
       $errorMessage = $e->getMessage();
       CRM_Core_Error::debug_var('Zoomzoom::getEventZoomMeetingId', $errorMessage);
       CRM_Core_Error::debug_var('Zoomzoom::getEventZoomMeetingId', $eventId);

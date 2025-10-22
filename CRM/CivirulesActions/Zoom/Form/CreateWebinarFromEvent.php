@@ -127,7 +127,7 @@ class CRM_CivirulesActions_Zoom_Form_CreateWebinarFromEvent extends CRM_Civirule
       foreach ($apiCountries['values'] as $apiCountryId => $apiCountry) {
         $countries[$apiCountryId] = $apiCountry['name'];
       }
-    } catch (CiviCRM_API3_Exception $ex) {
+    } catch (CRM_Core_Exception $ex) {
     }
     return $countries;
   }
