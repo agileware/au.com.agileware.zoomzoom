@@ -31,6 +31,40 @@ class CRM_Zoomzoom_Zoom {
   }
 
   /**
+   * Get all users for the Zoom account
+   *
+   * @return array
+   */
+  static function getUsers() {
+    static $allUsers;
+
+    if (!is_null($allUsers)) {
+      return $allUsers['users'] ?? [];
+    }
+
+    $zoom = self::getZoomObject();
+
+    // Scopes: user:read:list_users:admin
+    $allUsers = $zoom->doRequest('GET', '/users', [
+      'status' => 'active',
+    ]);
+    return $allUsers['users'] ?? [];
+  }
+
+  /**
+   * Check if the user supports Zoom Webinars
+   *
+   * @param array $user
+   * @return bool
+   */
+  protected static function userSupportsWebinars($user) {
+    $zoom = self::getZoomObject();
+    // Scopes: user:read:settings:admin
+    $settings = $zoom->doRequest('GET', '/users/{userId}/settings', [], ['userId' => $user['id']]);
+    return $settings['feature']['webinar'] ?? false;
+  }
+
+  /**
    * Get the Zoom account owner for the current Zoom JWT
    * 
    * OAuth scopes required: user:read:admin
@@ -77,10 +111,26 @@ class CRM_Zoomzoom_Zoom {
    * @return array|bool
    */
   static function getZooms($api, $day_offset = 0) {
+    $users = self::getUsers() ?? [];
+    $zooms = [];
+    foreach ($users as $user) {
+      // Get the Zooms for each user
+      $userZooms = self::getZoomsByUser($api, $day_offset, $user);
+      $zooms = array_merge($zooms, $userZooms);
+    }
+
+    return $zooms;
+  }
+
+  static function getZoomsByUser($api, $day_offset = 0, $user) {
     $date_offset = strtotime($day_offset . ' days');
-    $user = self::getOwner();
     $zoom_api = self::getZoomObject();
     $zooms = [];
+
+    if ($api === 'webinars' && !self::userSupportsWebinars($user)) {
+      // If the user does not support webinars then return an empty array
+      return [];
+    }
 
     $params = [
       'page_size' => 300,
