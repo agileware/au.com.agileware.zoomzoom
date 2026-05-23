@@ -318,16 +318,15 @@ class CRM_Zoomzoom_Zoom {
     try {
       $email = trim(strtolower($registration_details['email']));
 
-      // @TODO this should really use an unsupervised dedupe rule
-      $emails = \Civi\Api4\Email::get()
-        ->selectRowCount()
-        ->addSelect('contact_id')
-        ->addWhere('email', '=', $email)
-        ->setLimit(1)
+      $duplicates = \Civi\Api4\Contact::getDuplicates(FALSE)
+        ->setDedupeRule('Individual.Unsupervised')
+        ->addValue('email_primary.email', $email)
+        ->addValue('first_name', $registration_details['first_name'])
+        ->addValue('last_name', $registration_details['last_name'])
         ->execute();
 
       // Contact does not exist, create it now
-      if ($emails->rowCount == 0) {
+      if ($duplicates->count() === 0) {
         // Create the contact now
         $new_contact = \Civi\Api4\Contact::create()
           ->addValue('contact_type', 'Individual')
@@ -343,7 +342,7 @@ class CRM_Zoomzoom_Zoom {
       }
       else {
         // Contact exists, set the Contact ID
-        $contact_id = $emails[0]['contact_id'];
+        $contact_id = $duplicates[0]['id'];
       }
 
       // Check if this contact is already registered on this event
