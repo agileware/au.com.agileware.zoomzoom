@@ -57,6 +57,13 @@ class CRM_CivirulesActions_Event_ZoomCreateMeetingFromEvent extends CRM_Civirule
 
     $params['duration'] = $actionParams['duration'];
     unset($actionParams['duration']);
+    if (empty($params['duration']) && !empty($event['event_start_date']) && !empty($event['event_end_date'])) {
+      $start = strtotime($event['event_start_date']);
+      $end = strtotime($event['event_end_date']);
+      if ($end > $start) {
+        $params['duration'] = (int) (($end - $start) / 60);
+      }
+    }
 
     $params['schedule_for'] = $actionParams['schedule_for'];
     unset($actionParams['schedule_for']);
