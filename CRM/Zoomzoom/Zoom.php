@@ -115,14 +115,14 @@ class CRM_Zoomzoom_Zoom {
     $zooms = [];
     foreach ($users as $user) {
       // Get the Zooms for each user
-      $userZooms = self::getZoomsByUser($api, $day_offset, $user);
+      $userZooms = self::getZoomsByUser($api, $user, $day_offset);
       $zooms = array_merge($zooms, $userZooms);
     }
 
     return $zooms;
   }
 
-  static function getZoomsByUser($api, $day_offset = 0, $user) {
+  static function getZoomsByUser($api, $user, $day_offset = 0) {
     $date_offset = strtotime($day_offset . ' days');
     $zoom_api = self::getZoomObject();
     $zooms = [];
