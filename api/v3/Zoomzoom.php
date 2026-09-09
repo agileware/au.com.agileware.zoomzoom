@@ -209,7 +209,7 @@ function civicrm_api3_zoomzoom_importattendees($params) {
               // Zoom uses inconsistent field names for registrants and participants
               $participant_name = explode(' ', trim($participant['name']));
               $participant_details['registration_date'] = strtotime('Now');
-              $participant_details['first_name'] = $participant_name[0];;
+              $participant_details['first_name'] = $participant_name[0];
               $participant_details['last_name'] = $participant_name[1];
               $participant_details['email'] = $participant['user_email'];
               $participant_details['event'] = $event;
