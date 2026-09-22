@@ -392,7 +392,7 @@ class CRM_Zoomzoom_Zoom {
     $updateEmail = strtolower(trim($to_update['email']));
 
     $emails = array_column($currentParticipants, 'GROUP_CONCAT:email.email');
-    $emails_flat = array();
+    $emails_flat = [];
     array_walk_recursive($emails, function($a) use (&$emails_flat) { $emails_flat[] = $a; });
 
     if (!in_array($updateEmail, $emails_flat)) {
