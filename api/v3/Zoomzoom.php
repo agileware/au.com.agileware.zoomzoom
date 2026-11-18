@@ -34,6 +34,11 @@ function _civicrm_api3_zoomzoom_importzooms_spec(&$spec) {
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
 function civicrm_api3_zoomzoom_importzooms($params) {
+  $lock = Civi::lockManager()->acquire('worker.zoomzoom.ImportZooms');
+  if (!$lock->isAcquired()) {
+    return civicrm_api3_create_error('Could not acquire lock, another ZoomZoom Import Zooms process is running');
+  }
+
   static $civicrm_timezones;
   try {
     $meetings = CRM_Zoomzoom_Zoom::getZooms('meetings', $params['day_offset']);
@@ -117,12 +122,16 @@ function civicrm_api3_zoomzoom_importzooms($params) {
         continue;
       }
     }
+
+    $lock->release();
     return civicrm_api3_create_success(TRUE, $params, 'Civizoom', 'importzooms');
 
   } catch (CRM_Core_Exception $e) {
     $errorMessage = $e->getMessage();
     CRM_Core_Error::debug_var('Zoomzoom::importzooms', $errorMessage);
     CRM_Core_Error::debug_var('Zoomzoom::importzooms', $params);
+
+    $lock->release();
     return civicrm_api3_create_error($errorMessage);
   }
 }
@@ -160,6 +169,11 @@ function _civicrm_api3_zoomzoom_importattendees_spec(&$spec) {
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
 function civicrm_api3_zoomzoom_importattendees($params) {
+  $lock = Civi::lockManager()->acquire('worker.zoomzoom.ImportAttendees');
+  if (!$lock->isAcquired()) {
+    return civicrm_api3_create_error('Could not acquire lock, another ZoomZoom Import Attendees process is running');
+  }
+
   try {
     // Get past Events which have a Zoom ID assigned
     try {
@@ -245,12 +259,16 @@ function civicrm_api3_zoomzoom_importattendees($params) {
       CRM_Core_Error::debug_var('Zoomzoom::importattendees', $errorMessage);
       CRM_Core_Error::debug_var('Zoomzoom::importattendees', $params);
     }
+
+    $lock->release();
     return civicrm_api3_create_success(TRUE, $params, 'Zoomzoom', 'importattendees');
 
   } catch (CRM_Core_Exception $e) {
     $errorMessage = $e->getMessage();
     CRM_Core_Error::debug_var('Zoomzoom::importattendees', $errorMessage);
     CRM_Core_Error::debug_var('Zoomzoom::importattendees', $params);
+
+    $lock->release();
     return civicrm_api3_create_error($errorMessage);
   }
 }
