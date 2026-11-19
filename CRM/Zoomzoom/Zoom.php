@@ -469,7 +469,8 @@ class CRM_Zoomzoom_Zoom {
         ->execute();
 
       // Contact already is registered for this event, update their status to Attended and record Zoom registration details
-      if ($existing_participant->rowCount == 1) {
+      // In the unexpected case there are multiple matching participants, just update the first one
+      if ($existing_participant->rowCount >= 1) {
         $results = \Civi\Api4\Participant::update()
           ->addWhere('id', '=', $existing_participant[0]['id'])
           ->addValue('status_id', $registration_details['status_id'])
