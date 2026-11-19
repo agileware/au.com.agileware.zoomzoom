@@ -131,7 +131,7 @@ class CRM_CivirulesActions_Event_ZoomCreateWebinarFromEvent extends CRM_Civirule
       */
 
       // Look up the custom field IDs
-      $zoom_global_dial_in_numbers_field_id = CRM_Core_BAO_CustomField::getCustomFieldID('global_dial_in_numbers', 'zoom', TRUE);
+      $zoom_global_dial_in_numbers_field_id = \CRM_Core_BAO_CustomField::getShortNameFromLongName('zoom.global_dial_in_numbers');
 
      $result = civicrm_api3('Event', 'create', [
         'id' =>  $event['id'],
