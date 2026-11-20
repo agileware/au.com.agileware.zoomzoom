@@ -14,7 +14,7 @@ This is just another [CiviCRM](https://civicrm.org) extension which integrates w
   Zoom registrations, attendees and absentees. Record as CiviCRM
   Participants and update Participant Status.
 
-The extension is licensed under [AGPL-3.0](LICENSE.txt).
+The extension is licensed under [AGPL-3.0](https://github.com/agileware/au.com.agileware.zoomzoom/blob/master/LICENSE.txt).
 
 ## Migrating from a JWT App
 
@@ -34,7 +34,7 @@ section below.
 	  * **View all user information** /user:read:admin, user:read:list_users:admin, user:read:user:admin
 	  * **View all user Webinars** /webinar:read:admin, webinar:read:list_past_instances:admin, webinar:read:list_absentees:admin, webinar:read:webinar:admin, webinar:read:list_past_participants:admin, webinar:read:participant:admin, webinar:read:registrant:admin, webinar:read:list_registrants:admin, webinar:read:list_webinars, webinar:read:list_webinars:admin
 	  * **View and manage all user Webinars** /webinar:write:admin, webinar:delete:registrant:admin, webinar:update:webinar:admin, webinar:delete:webinar:admin, webinar:write:webinar:admin, webinar:write:registrant:admin
-	  ![Screenshot of appropriate scope configuration](images/zoom-app-scopes.png)
+	  ![Screenshot of appropriate scope configuration](https://github.com/agileware/au.com.agileware.zoomzoom/raw/master/images/zoom-app-scopes.png)
    3. Continue to Activation and Activate your app
    4. Load the App Credentials tab to get the **Account ID**, **Client ID** and **Client Secret**
 2. In CiviCRM, go to the Zoom Settings page, Administer / Zoom Settings.
@@ -66,7 +66,7 @@ add additional actions before or after Zoom action.
 
 Here is an example configuration using Event Types to create, update, and delete Zoom entities.
 
-![Zoom Event Rules configuration example](images/rules-example.png)
+![Zoom Event Rules configuration example](https://github.com/agileware/au.com.agileware.zoomzoom/raw/master/images/rules-example.png)
 
 Default Rules are provided for your reference in the `/optional` directory. You can also refer to the *Tests*
 section as a guide for configuring your rules.
@@ -95,9 +95,9 @@ If the user account you wish to host the Zoom meetings/webinars is *not* the Own
 Zoom Zoom is provided with optional default configuration sets.
 
 - Default CiviRules rulesets
-   [zoom_zoom_default_rules-v2.zip](optional/zoom_zoom_default_rules-v2.zip)
+   [zoom_zoom_default_rules-v2.zip](https://github.com/agileware/au.com.agileware.zoomzoom/blob/master/optional/zoom_zoom_default_rules-v2.zip)
 - Sample schedule reminder message template
-   [zoom_zoom_schedule_reminder-v1.zip](optional/zoom_zoom_schedule_reminder-v1.zip)
+   [zoom_zoom_schedule_reminder-v1.zip](https://github.com/agileware/au.com.agileware.zoomzoom/blob/master/optional/zoom_zoom_schedule_reminder-v1.zip)
    1. You can then create a schedule reminder from "Administer / Communications / Schedule Reminders"
    1. Press the **Add Reminder** button
    1. For the **Used For** field, select *Event Type*
@@ -110,7 +110,7 @@ Zoom Zoom is provided with optional default configuration sets.
    1. The HTML Format field will the have the imported template inserted into it, ready to be
    customised.
 
-![Schedule Reminder example](images/schedule-reminder-example.png)
+![Schedule Reminder example](https://github.com/agileware/au.com.agileware.zoomzoom/raw/master/images/schedule-reminder-example.png)
 
 ### Deprecated - Third party extension CiviCRM Configuration Loader (configitems) no longer supported
 
@@ -200,4 +200,4 @@ services including:
 Support your Australian [CiviCRM](https://civicrm.org) developers,
 [contact Agileware](https://agileware.com.au/contact) today!
 
-![Agileware](logo/agileware-logo.png)
+![Agileware](https://github.com/agileware/au.com.agileware.zoomzoom/raw/master/docs/logo/agileware-logo.png)
