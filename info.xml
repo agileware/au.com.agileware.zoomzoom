@@ -14,11 +14,11 @@
     <url desc="Support">https://github.com/agileware/au.com.agileware.zoomzoom/issues</url>
     <url desc="Licensing">https://www.gnu.org/licenses/gpl-3.0.txt</url>
   </urls>
-  <releaseDate>2026-09-23</releaseDate>
-  <version>1.10.11</version>
+  <releaseDate>2026-11-20</releaseDate>
+  <version>1.10.12</version>
   <develStage>stable</develStage>
   <compatibility>
-    <ver>5.79</ver>
+    <ver>6.11</ver>
   </compatibility>
   <comments>Credit to Lighthouse Consulting and Design, Inc for developing https://github.com/lcdservices/biz.lcdservices.civizoom which was used as the basis for this new extension. Credit to Veda Consulting for developing https://github.com/veda-consulting-company/ncn-civi-zoom which was used as reference for the CiviRules implementation.</comments>
   <requires>
